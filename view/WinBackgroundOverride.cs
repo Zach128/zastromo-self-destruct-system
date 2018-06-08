@@ -21,6 +21,11 @@ namespace WinGraphicsController.view
         /// </summary>
         private IntPtr workerw;
 
+        public IntPtr WorkerW
+        {
+            get { return workerw; }
+        }
+
         public WinBackgroundOverride() {
             // Fetch the Progman window
             IntPtr progman = User32.FindWindow("Progman", null);
@@ -62,26 +67,57 @@ namespace WinGraphicsController.view
             }), IntPtr.Zero);
         }
 
-        public void DemoDrawRect(float x, float y, float width, float height)
+        /// <summary>
+        /// Fill the WorkerW window with a specific color
+        /// </summary>
+        /// <param name="color">The color to fill the window with</param>
+        public void FillWithColor(Color color)
         {
             UseWorkerWDC(new DeviceContextUsage((dc) =>
             {
-                // Create a Graphics instance from the Device Context
                 using (Graphics g = Graphics.FromHdc(dc))
                 {
-                    // Use the Graphics instance to draw a white rectangle in the upper 
-                    // left corner. In case you have more than one monitor think of the 
-                    // drawing area as a rectangle that spans across all monitors, and 
-                    // the 0,0 coordinate being in the upper left corner.
-                    g.FillRectangle(new SolidBrush(Color.White), 0, 0, 500, 500);
-                    g.FillRectangle(new SolidBrush(Color.Coral), x, y, width, height);
+                    g.Clear(color);
                 }
             }));
         }
 
-        public IntPtr WorkerW
+        /// <summary>
+        /// Demo function for rendering a basic hexagon and X through it.
+        /// </summary>
+        public void DrawWarningOnBkg()
         {
-            get { return workerw; }
+            UseWorkerWDC(new DeviceContextUsage(dc => {
+                using (Graphics g = Graphics.FromHdc(dc))
+                {
+                    g.PageUnit = GraphicsUnit.Pixel;
+
+                    ScreenGraphics sg = new ScreenGraphics(g);
+
+                    PointF[] octPoints = new PointF[]
+                    {
+                        sg.NewPointRM(37.5f, 87.5f),
+                        sg.NewPointRM(62.5f, 87.5f),
+                        sg.NewPointRM(87.5f, 62.5f),
+                        sg.NewPointRM(87.5f, 37.5f),
+                        sg.NewPointRM(62.5f, 12.5f),
+                        sg.NewPointRM(37.5f, 12.5f),
+                        sg.NewPointRM(12.5f, 37.5f),
+                        sg.NewPointRM(12.5f, 62.5f)
+                    };
+
+                    PointF x1Begin = sg.PointAlongLine(octPoints[0], octPoints[7]);
+                    PointF x1End = sg.PointAlongLine(octPoints[3], octPoints[4]);
+                    PointF x2Begin = sg.PointAlongLine(octPoints[1], octPoints[2]);
+                    PointF x2End = sg.PointAlongLine(octPoints[5], octPoints[6]);
+
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    g.DrawLine(new Pen(Color.Orange, 10f), x1Begin, x1End);
+                    g.DrawLine(new Pen(Color.Orange, 10f), x2Begin, x2End);
+
+                    g.DrawPolygon(new Pen(Color.OrangeRed, 10f), octPoints);
+                }
+            }));
         }
 
         /// <summary>
@@ -89,13 +125,7 @@ namespace WinGraphicsController.view
         /// </summary>
         public void ClearBackground()
         {
-            UseWorkerWDC(new DeviceContextUsage((dc) =>
-            {
-                using (Graphics g = Graphics.FromHdc(dc))
-                {
-                    g.Clear(Color.Empty);
-                }
-            }));
+            FillWithColor(Color.Transparent);
         }
 
         /// <summary>
@@ -126,6 +156,6 @@ namespace WinGraphicsController.view
             IntPtr dc = User32.GetDCEx(workerw, IntPtr.Zero, (DeviceContextValues)0x403);
             return dc;
         }
-
+        
     }
 }
