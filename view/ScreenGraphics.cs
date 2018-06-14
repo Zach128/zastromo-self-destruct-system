@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Svg;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using TestWinBackGrnd.Svg;
 
 namespace WinGraphicsController.view
 {
@@ -27,6 +30,27 @@ namespace WinGraphicsController.view
         public ScreenGraphics(Graphics g)
         {
             ScreenPix = g.VisibleClipBounds;
+            SvgParser.MaximumSize = new Size((int)ScreenPix.Width, (int)ScreenPix.Height);
+        }
+
+        public SvgDocument LoadNewDocument(string filepath)
+        {
+            SvgParser.MaximumSize = screenPix.Size.ToSize();
+            SvgDocument document = SvgParser.GetSvgDocument(filepath);
+            return document;
+        }
+
+        public SvgDocument LoadDocumentFromResource(string resContents)
+        {
+            SvgParser.MaximumSize = screenPix.Size.ToSize();
+            SvgDocument document = SvgParser.GetSvgDocumentFromString(resContents);
+            return document;
+        }
+
+        public Bitmap SvgToImage(SvgDocument doc)
+        {
+            Bitmap image = SvgParser.GetBitmapFromSVG(doc);
+            return image;
         }
 
         public PointF NewPointRM(float percX, float percY)

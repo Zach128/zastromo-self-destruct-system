@@ -5,6 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Svg;
+using TestWinBackGrnd.Properties;
 
 namespace WinGraphicsController.view
 {
@@ -65,6 +68,7 @@ namespace WinGraphicsController.view
 
                 return true;
             }), IntPtr.Zero);
+
         }
 
         /// <summary>
@@ -114,7 +118,7 @@ namespace WinGraphicsController.view
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                     g.DrawLine(new Pen(Color.Orange, 10f), x1Begin, x1End);
                     g.DrawLine(new Pen(Color.Orange, 10f), x2Begin, x2End);
-
+                    
                     g.DrawPolygon(new Pen(Color.OrangeRed, 10f), octPoints);
                 }
             }));

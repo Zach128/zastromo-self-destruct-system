@@ -77,6 +77,7 @@ namespace WinGraphicsController
                     }
                     catch (Exception e)
                     {
+                        Console.Write(e.StackTrace);
                         return BKG_RESPONSE.CTRL_FAIL;
                     }
                 case BKG_ACTION.CLEAR_BKG:
