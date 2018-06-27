@@ -80,5 +80,38 @@ namespace TestWinBackGrnd.Properties {
                 return ResourceManager.GetString("self_destruct_warning", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VER 0.1;
+        ///
+        /////This is a early placeholder for the zastromo underlay drawing system.
+        ///
+        /////Data
+        /////Octagon shape
+        ///arr octPoints : {
+        ///point(37.5rp, 87.5rp),
+        ///point(62.5rp, 87.5rp),
+        ///point(87.5rp, 62.5rp),
+        ///point(87.5rp, 37.5rp),
+        ///point(62.5rp, 12.5rp),
+        ///point(37.5rp, 12.5rp),
+        ///point(12.5rp, 37.5rp),
+        ///point(12.5rp, 62.5rp)
+        ///};
+        ///
+        /////Cross line 1
+        ///line line1 : line(
+        ///linesplt(octPoints[0], octPoints[7]),
+        ///linesplt(octPoints[3], octPoints[4])
+        ///);
+        /////Cross line 2
+        ///line line2 : line(
+        ///linesplt(octPoints[1], octPoint [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string zastromo_warning_underlay {
+            get {
+                return ResourceManager.GetString("zastromo_warning_underlay", resourceCulture);
+            }
+        }
     }
 }

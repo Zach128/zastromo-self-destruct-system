@@ -1,0 +1,78 @@
+//variable declarations
+grammar zastromo-graphics
+
+int			: ('0' .. '9')+; 		//Unsigned integer composed of 1-many digits.
+byte		: '0' .. '255';
+hexNibble	: '0' .. '9' | 'A' .. 'F';
+hexByte		: hexNibble hexNibble;
+decimal		: int ('.' int)?;
+float		: decimal 'f';			//Float consisting of 2 period-separated digits with an 'f' suffix.
+ruPe		: decimal 'rp';			//Relative percent unit similar to a float but with an rp suffix.
+
+////Strings and variable names////
+namesafeChars	: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9')*;
+VARNAME			: namesafeChars;
+
+////Array variables////
+element		: namesafeChars | point | pen | arr;			//Possible array content types
+elements	: element (',' element)*;	//Internal array structure
+arr			: '{' element '}';			//Overall array structure
+arrIndex	: int;
+arrDec 		: 'arr' VARNAME ':' arr;	//Array declaration
+arrAccess	: VARNAME '[' arrIndex ']'; //Access array variable
+
+////Point variables////
+point		: 'point' '(' decimal ',' decimal ')'	//2D point initialisation forms
+			| 'point' '(' float ',' float ')'
+			| 'point' '(' ruPe ',' ruPe ')'
+			| VARNAME
+			;
+pointDec	: 'point' VARNAME ':' point;
+pointAssign	: VARNAME ':' point;
+
+////Header variables////
+VerId		: int ('.' int)0..5;		//Version id type restricted to 5 separated integers.
+VERSION		: 'VER' VerId;
+
+////Local variables////
+renderMode		: 'LOW' | 'SMOOTH_LOW' | 'SMOOTH_HIGH';
+renderModeAssign: 'renderMode' ':' renderMode;
+renderMode		: 'renderMode';
+defaultPenAssign: 'basePen' ':' pen;
+defaultPen		: 'basePen';
+
+////Pen variables////
+colourEnum	: 'RED'								//Simple enum of basic colours.
+			| 'GREEN'
+			| 'BLUE'
+			| 'YELLOW'
+			| 'WHITE'
+			| 'BLACK'
+			| 'ORANGE_RED'
+			| 'VIOLET'
+			;
+colourHex	: '0x' hexByte hexByte hexByte;		//RGB8 format for colours.
+colour		: colourEnum | colourHex;			//Either a predefined colour or a hex value will suffice.
+pen			: 'pen' '(' colour ',' float ')'	//A pen object defined by colour and pen size.
+			| VARNAME
+			;
+penDec		: 'pen' VARNAME ':' pen;
+penAssign	: VARNAME ':' pen;
+
+////Line variables////
+line		: 'line' '(' point ',' point ')'//Default line constructor
+			| VARNAME
+			| lineSplitMethod				//Return value of linesplt is line variable
+			;
+lineDec		: 'line' VARNAME ':' line;
+lineAssign	: VARNAME ':' pen;
+
+////Method calls////
+drawMethod		: 'draw' '(' line|arr|point ')';	//Draw all the points provided
+drawPolyMethod	: 'drawPoly' '(' arr ')';			//Draw all the points provided, linking the first and final point together	
+lineSplitMethod	: 'linesplt' '(' point ',' point (',' float)? ')' 	//Get a point by splitting a line 50/50 or by a predefined percentage.
+				| 'linesplt' '(' line (',' float)? ')'
+				;
+
+////Miscellaneous////
+lineComment	: '//';

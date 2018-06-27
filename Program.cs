@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestWinBackGrnd.IO.GraphicFile;
+using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
 
 namespace WinGraphicsController
@@ -33,6 +35,19 @@ namespace WinGraphicsController
 
             Instance.winOverride = new WinBackgroundOverride();
 
+            //Testing graphics Lexer
+            GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
+            Token t = lexer.NextToken();
+            while (t.type != TokenType.EOF)
+            {
+                Console.WriteLine(t);
+                t = lexer.NextToken();
+            }
+
+            Console.WriteLine("\nToken printing complete. Press any key to continue...");
+            Console.ReadKey();
+
+            /*
             Instance.StartClient();
             Console.Write("Client started.\n");
 
@@ -43,7 +58,7 @@ namespace WinGraphicsController
                 Instance.WaitForConnection();
                 Instance.WaitForDisconnection();
             }
-
+            //*/
         }
 
         public override void ClientDisconnected()
