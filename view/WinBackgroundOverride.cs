@@ -34,8 +34,8 @@ namespace WinGraphicsController.view
             IntPtr progman = User32.FindWindow("Progman", null);
 
             IntPtr result = IntPtr.Zero;
-            // Send 0x052C to Progman. This message directs Progman to spawn a 
-            // WorkerW behind the desktop icons. If it is already there, nothing 
+            // Send 0x052C to Progman. This message directs Progman to spawn a
+            // WorkerW behind the desktop icons. If it is already there, nothing
             // happens.
             User32.SendMessageTimeout(progman,
                                    0x052C,

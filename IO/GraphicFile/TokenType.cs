@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestWinBackGrnd.IO.GraphicFile
+﻿namespace TestWinBackGrnd.IO.GraphicFile
 {
     public enum TokenType
     {
@@ -20,7 +14,7 @@ namespace TestWinBackGrnd.IO.GraphicFile
         COMMA,      // ','
         SLASH,      // '/'
         NAME,       // 'ANYSTRING'
-        INTEGER,    // '1234'
+        INTEGER,    // '12'
         DECIMAL,    // '12.5'
         FLOAT,      // '12.5f'
         RUPE        // '12.5rp'

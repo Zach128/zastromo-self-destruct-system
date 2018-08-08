@@ -1,7 +1,29 @@
-//variable declarations
+////Z.U.L. (Zastromo's Underlay Language)
+
 grammar zastromo-graphics
 
+////script line beginnings////
+scriptLine : declaration | assignment | methodCall | lineComment;
+declaration	: arrDec
+			| pointDec
+			| lineDec
+			| penDec
+			;
+assignment	: arrAssign
+			| pointAssign
+			| renderModeAssign
+			| defaultPenAssign
+			| penAssign
+			| lineAssign
+			;
+methodCall	: drawMethod
+			| drawPolyMethod
+			| lineSplitMethod
+			;
+
+////Variable types////
 int			: ('0' .. '9')+; 		//Unsigned integer composed of 1-many digits.
+sInt		: '-'? int;
 byte		: '0' .. '255';
 hexNibble	: '0' .. '9' | 'A' .. 'F';
 hexByte		: hexNibble hexNibble;
@@ -18,8 +40,10 @@ element		: namesafeChars | point | pen | arr;			//Possible array content types
 elements	: element (',' element)*;	//Internal array structure
 arr			: '{' element '}';			//Overall array structure
 arrIndex	: int;
-arrDec 		: 'arr' VARNAME ':' arr;	//Array declaration
+arrDec 		: arrKeyword VARNAME ':' arr;	//Array declaration
+arrAssign	: VARNAME ':' arr;
 arrAccess	: VARNAME '[' arrIndex ']'; //Access array variable
+arrKeyword	: 'arr';
 
 ////Point variables////
 point		: 'point' '(' decimal ',' decimal ')'	//2D point initialisation forms
@@ -35,11 +59,11 @@ VerId		: int ('.' int)0..5;		//Version id type restricted to 5 separated integer
 VERSION		: 'VER' VerId;
 
 ////Local variables////
-renderMode		: 'LOW' | 'SMOOTH_LOW' | 'SMOOTH_HIGH';
-renderModeAssign: 'renderMode' ':' renderMode;
-renderMode		: 'renderMode';
-defaultPenAssign: 'basePen' ':' pen;
-defaultPen		: 'basePen';
+renderModeEnum		: 'LOW' | 'SMOOTH_LOW' | 'SMOOTH_HIGH';
+renderModeAssign	: renderModeKeyword ':' renderModeEnum;
+renderModeKeyword	: 'renderMode';
+defaultPenAssign	: defaultPenKeyword ':' pen;
+defaultPenKeyword	: 'basePen';
 
 ////Pen variables////
 colourEnum	: 'RED'								//Simple enum of basic colours.
@@ -53,18 +77,20 @@ colourEnum	: 'RED'								//Simple enum of basic colours.
 			;
 colourHex	: '0x' hexByte hexByte hexByte;		//RGB8 format for colours.
 colour		: colourEnum | colourHex;			//Either a predefined colour or a hex value will suffice.
-pen			: 'pen' '(' colour ',' float ')'	//A pen object defined by colour and pen size.
+pen			: penKeyword '(' colour ',' float ')'	//A pen object defined by colour and pen size.
 			| VARNAME
 			;
-penDec		: 'pen' VARNAME ':' pen;
+penDec		: penKeyword VARNAME ':' pen;
 penAssign	: VARNAME ':' pen;
+penKeyword	: 'pen';
 
 ////Line variables////
-line		: 'line' '(' point ',' point ')'//Default line constructor
+lineKeyword	: 'line';
+line		: lineKeyword '(' point ',' point ')'//Default line constructor
 			| VARNAME
 			| lineSplitMethod				//Return value of linesplt is line variable
 			;
-lineDec		: 'line' VARNAME ':' line;
+lineDec		: lineKeyword VARNAME ':' line;
 lineAssign	: VARNAME ':' pen;
 
 ////Method calls////

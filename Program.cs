@@ -38,9 +38,22 @@ namespace WinGraphicsController
             //Testing graphics Lexer
             GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             Token t = lexer.NextToken();
+
+            int lineCount = 1;
+            int lineTokens = 1;
+
             while (t.type != TokenType.EOF)
             {
-                Console.WriteLine(t);
+                Console.WriteLine("Token " + lineCount + "." + lineTokens + "\t" + t);
+                
+                //Increment token/line counts unless line terminator(';') reached.
+                if (t.type == TokenType.SEMICOLON)
+                {
+                    lineCount++;
+                    lineTokens = 1;
+                }
+                else lineTokens++;
+
                 t = lexer.NextToken();
             }
 
