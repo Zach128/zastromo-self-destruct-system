@@ -68,12 +68,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IO\GraphicFile\GraphicsLexer.cs" />
-    <Compile Include="IO\GraphicFile\GraphicsParser.cs" />
+    <Compile Include="IO\GraphicFile\Parsers\GraphicsParser.cs" />
     <Compile Include="IO\GraphicFile\Lexer.cs" />
     <Compile Include="IO\GraphicFile\MatchNotFoundException.cs" />
-    <Compile Include="IO\GraphicFile\Parser.cs" />
-    <Compile Include="IO\GraphicFile\Token.cs" />
-    <Compile Include="IO\GraphicFile\TokenType.cs" />
+    <Compile Include="IO\GraphicFile\Models\ProtectedNames.cs" />
+    <Compile Include="IO\GraphicFile\Parsers\Parser.cs" />
+    <Compile Include="IO\GraphicFile\Models\Token.cs" />
+    <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

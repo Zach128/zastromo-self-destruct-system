@@ -1,4 +1,4 @@
-﻿namespace TestWinBackGrnd.IO.GraphicFile
+﻿namespace TestWinBackGrnd.IO.GraphicFile.Models
 {
     public enum TokenType
     {

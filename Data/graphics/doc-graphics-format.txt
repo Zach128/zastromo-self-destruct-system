@@ -15,6 +15,7 @@ assignment	: arrAssign
 			| defaultPenAssign
 			| penAssign
 			| lineAssign
+			| VARNAME ':' VARNAME;
 			;
 methodCall	: drawMethod
 			| drawPolyMethod
@@ -55,7 +56,7 @@ pointDec	: 'point' VARNAME ':' point;
 pointAssign	: VARNAME ':' point;
 
 ////Header variables////
-VerId		: int ('.' int)0..5;		//Version id type restricted to 5 separated integers.
+VerId		: int ('.' int)0..3;		//Version id type restricted to 5 separated integers.
 VERSION		: 'VER' VerId;
 
 ////Local variables////

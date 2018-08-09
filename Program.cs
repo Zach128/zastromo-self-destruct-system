@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile;
+using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Parsers;
 using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
 
@@ -35,7 +37,12 @@ namespace WinGraphicsController
 
             Instance.winOverride = new WinBackgroundOverride();
 
-            //Testing graphics Lexer
+            //Testing
+
+            //string testDataArrayDec = "arr octPoints : {point(37.5rp, 87.5rp),point(62.5rp, 87.5rp),point(87.5rp, 62.5rp),point(87.5rp, 37.5rp),point(62.5rp, 12.5rp),point(37.5rp, 12.5rp),point(12.5rp, 37.5rp),point(12.5rp, 62.5rp)};";
+            //string testDataLineDec = "line line1: line(linesplt(octPoints[0], octPoints[7]), linesplt(octPoints[3], octPoints[4]));";
+            //string testDataAssign = "basePen : pen(ORANGE, 10f);";
+
             GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             Token t = lexer.NextToken();
 
@@ -57,6 +64,9 @@ namespace WinGraphicsController
                 t = lexer.NextToken();
             }
 
+            GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
+            GraphicsParser parser = new GraphicsParser(parsersLexer, 2);
+            parser.Parse();
             Console.WriteLine("\nToken printing complete. Press any key to continue...");
             Console.ReadKey();
 

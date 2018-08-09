@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestWinBackGrnd.IO.GraphicFile.Models;
 
-namespace TestWinBackGrnd.IO.GraphicFile
+namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 {
     /// <summary>
     /// LL(k) parser for ZUL implementation.
     /// </summary>
-    class Parser
+    public abstract class Parser
     {
 
         Lexer input;
@@ -51,6 +52,23 @@ namespace TestWinBackGrnd.IO.GraphicFile
             if (LA(1) == x) Consume();
             else throw new MatchNotFoundException("Expecting " + x.ToString() + "; found " + LT(1));
         }
+
+        public void DumpAsLines()
+        {
+            string line = string.Empty;
+            do
+            {
+                line += LT(1).text;
+                if (LA(1) == TokenType.SEMICOLON)
+                {
+                    Console.WriteLine(line);
+                    line = "";
+                }
+                Consume();
+            } while (LT(1).type != TokenType.EOF);
+        }
+
+        public abstract void Parse();
 
     }
 }
