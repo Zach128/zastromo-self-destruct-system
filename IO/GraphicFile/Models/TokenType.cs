@@ -3,6 +3,7 @@
     public enum TokenType
     {
         EOF = 0,    // 'EOF character sequence'
+        NONE,       // No token/placeholder
         LRBRACK,    // '('
         RRBRACK,    // ')'
         LCBRACK,    // '{'

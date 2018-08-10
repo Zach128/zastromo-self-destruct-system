@@ -46,7 +46,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 
         #region Variable matchers
 
-        public void Numeral(string errorMsg = "Error: Expected int, float or rupe;")
+        public void Numeral (string errorMsg = "Error: Expected int, float or rupe;")
         {
 
             TokenType type = LA(1);
@@ -149,8 +149,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
         {
             if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) { Method(); }
             else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK) { ArrayAccess(); }
+            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LCBRACK) { Array(); }
             else if (LA(1) == TokenType.NAME) { Match(TokenType.NAME); }
-            else { Numeral("Error in Point constructor: Expected int, float or rupe;"); }
+            else { Numeral("Error in parameter parsing: Expected int, float or rupe;"); }
         }
 
         #endregion
@@ -176,14 +177,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
         
         public void Element()
         {
-            TokenType type = LA(1);
-            if (type == TokenType.NAME && LA(2) == TokenType.LRBRACK) { Method(); }
-            else if (type == TokenType.LCBRACK) { Array(); }
-            else if (type == TokenType.NAME && LA(2) == TokenType.LRBRACK)
-            {
-                Match(TokenType.NAME);
-            }
-            else throw new MatchNotFoundException("Error in Array parsing: Expected name, list or constructor; found " + LT(1));
+            Parameter();
         }
 
         public void ArrayAccess()

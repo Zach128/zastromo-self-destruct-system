@@ -11,6 +11,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Models
         public TokenType type;
         public string text;
 
+        public Token(TokenType type)
+        {
+            this.type = type;
+            this.text = "";
+        }
+
         public Token(TokenType type, string text)
         {
             this.type = type;

@@ -1,0 +1,53 @@
+﻿functionNode
+	 func
+	/   \
+  name elms
+
+declNode
+	  decl
+	 /    \
+   name  assign
+	 
+assignNode
+  assign
+  /   \
+name  val
+
+valueNode
+		val
+		 |
+   prim|arrRet|mthd
+
+primNode
+		prim
+		 |
+  int|dec|float|rupe
+
+arrRetNode
+    arrRet
+	   |
+	  int
+
+arrNode
+	   arr
+	    |
+	 (val)+
+
+eg.
+	  :
+  /       \
+basePen	   func
+		/   |    \
+	 pen  ORANGE  10f
+	 
+	decl
+   /    \
+ line     :
+		/   \
+	 line1 func
+		  /     \			\
+		line	linesplt	...
+				/		\
+			 arrRet		arrRet
+			/     \     /      \
+		octPoints  0 octPoints  0

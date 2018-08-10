@@ -71,10 +71,19 @@
     <Compile Include="IO\GraphicFile\Parsers\GraphicsParser.cs" />
     <Compile Include="IO\GraphicFile\Lexer.cs" />
     <Compile Include="IO\GraphicFile\MatchNotFoundException.cs" />
-    <Compile Include="IO\GraphicFile\Models\ProtectedNames.cs" />
     <Compile Include="IO\GraphicFile\Parsers\Parser.cs" />
     <Compile Include="IO\GraphicFile\Models\Token.cs" />
     <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ArrayNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ArrRetNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\AST.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\DeclNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ExprNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\FuncNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\NodeType.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\AssignNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NameNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NumNode.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\graphics\doc-graphics-format.txt" />
+    <Content Include="Data\graphics\doc-syntax-tree-nodes.txt" />
     <Content Include="Data\graphics\zastromo-warning-underlay.txt" />
   </ItemGroup>
   <ItemGroup>

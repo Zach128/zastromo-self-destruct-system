@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile;
 using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.Parsers;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
 
@@ -66,7 +68,8 @@ namespace WinGraphicsController
 
             GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             GraphicsParser parser = new GraphicsParser(parsersLexer, 2);
-            parser.Parse();
+
+            //parser.Parse();
             Console.WriteLine("\nToken printing complete. Press any key to continue...");
             Console.ReadKey();
 
