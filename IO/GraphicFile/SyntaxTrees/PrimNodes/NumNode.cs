@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes
 {
     public class NumNode : ExprNode
     {
+
         public NumNode(Token token) : base(token)
         {
             switch(token.type)
@@ -30,5 +32,16 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes
                     break;
             }
         }
+
+        public string getValue()
+        {
+            return token.text;
+        }
+
+        public override void Visit(IZULVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
     }
 }

@@ -84,6 +84,9 @@
     <Compile Include="IO\GraphicFile\SyntaxTrees\AssignNode.cs" />
     <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NameNode.cs" />
     <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NumNode.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\IZULVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\PrintTreeVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\PrintTypesVisitor.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,9 +110,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\graphics\doc-graphics-format.txt" />
-    <Content Include="Data\graphics\doc-syntax-tree-nodes.txt" />
+    <Content Include="IO\GraphicFile\Docs\doc-graphics-format.txt" />
+    <Content Include="IO\GraphicFile\Docs\doc-syntax-tree-nodes.txt" />
     <Content Include="Data\graphics\zastromo-warning-underlay.txt" />
+    <Content Include="IO\GraphicFile\Docs\test-sample-ast.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -132,5 +136,6 @@
   <ItemGroup>
     <None Include="Data\graphics\self-destruct-warning.svg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
@@ -32,6 +33,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
                 if (index >= -1 && index < ChildCount()) return Child(index + 1);
                 else throw new IndexOutOfRangeException("Invalid index: " + index + ". min: -1, max: " + (ChildCount() - 1));
             }
+        }
+
+        public override void Visit(IZULVisitor visitor)
+        {
+            visitor.Visit(this);
         }
 
     }

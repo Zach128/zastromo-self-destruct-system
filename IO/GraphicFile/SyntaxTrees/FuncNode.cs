@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
@@ -31,6 +32,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             {
                 return Child(index);
             }
+        }
+
+        public override void Visit(IZULVisitor visitor)
+        {
+            visitor.Visit(this);
         }
 
     }

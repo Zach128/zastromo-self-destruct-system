@@ -10,6 +10,7 @@ using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.Parsers;
 using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
 using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
 using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
 
@@ -68,6 +69,26 @@ namespace WinGraphicsController
 
             GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             GraphicsParser parser = new GraphicsParser(parsersLexer, 2);
+
+            ExprNode funcNameNode = new NameNode(new Token(TokenType.NAME, "line"));
+            ExprNode subFunctionNameNode = new NameNode(new Token(TokenType.NAME, "linesplt"));
+            ExprNode param1Node = new NumNode(new Token(TokenType.RUPE, "50.0rp"));
+            ExprNode param2Node = new NumNode(new Token(TokenType.RUPE, "50.0rp"));
+            ExprNode func1Node = new FuncNode(subFunctionNameNode, new ExprNode[] { param1Node, param2Node });
+            ExprNode param3Node = new NumNode(new Token(TokenType.RUPE, "25.0rp"));
+            ExprNode param4Node = new NumNode(new Token(TokenType.RUPE, "25.0rp"));
+            ExprNode func2Node = new FuncNode(subFunctionNameNode, new ExprNode[] { param3Node, param4Node });
+
+            ExprNode lineConNode = new FuncNode(funcNameNode, new ExprNode[] { func1Node, func2Node });
+
+            ExprNode decTypeNode = new NameNode(new Token(TokenType.NAME, "line"));
+            ExprNode decNameNode = new NameNode(new Token(TokenType.NAME, "line1"));
+
+            ExprNode assignLineNode = new AssignNode(decNameNode, lineConNode);
+            ExprNode decNode = new DeclNode(decTypeNode, assignLineNode);
+
+            PrintTypesVisitor visitor = new PrintTypesVisitor();
+            decNode.Visit(visitor);
 
             //parser.Parse();
             Console.WriteLine("\nToken printing complete. Press any key to continue...");

@@ -9,7 +9,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
     public abstract class AST
     {
-        Token token;
+        protected Token token;
         private List<AST> children;
         public AST() { }
         public AST (Token token) { this.token = token; }
@@ -27,6 +27,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 
         public override string ToString()
         { return token != null ? token.ToString() : "nil"; }
+
+        public bool IsChildrenNull() { return children == null; }
 
         public string ToStringTree()
         {

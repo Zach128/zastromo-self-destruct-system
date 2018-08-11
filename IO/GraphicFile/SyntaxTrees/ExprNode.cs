@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
@@ -22,6 +23,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             { evalType = value; }
         }
 
+        public new ExprNode Child(int index)
+        {
+            return (ExprNode) base.Child(index);
+        }
+
         public override string ToString()
         {
             if (EvalType != NodeType.INVALID)
@@ -30,6 +36,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             }
             return base.ToString();
         }
+
+        public abstract void Visit(IZULVisitor visitor);
 
     }
 }
