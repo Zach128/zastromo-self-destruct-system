@@ -1,6 +1,6 @@
 VER : 0.1;
 
-//This is a early placeholder for the zastromo underlay drawing system.
+//This is a early placeholder for the zastromo underlay drawing system (codenamed Z.U.L.).
 
 //Data
 //Octagon shape
