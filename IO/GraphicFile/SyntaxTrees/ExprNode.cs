@@ -10,9 +10,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
     public abstract class ExprNode : AST
     {
-        public ExprNode(Token token) : base(token)
-        {
-        }
+
+        public ExprNode() : base() { }
+        public ExprNode(Token token) : base(token) { }
 
         private NodeType evalType;
         public NodeType EvalType

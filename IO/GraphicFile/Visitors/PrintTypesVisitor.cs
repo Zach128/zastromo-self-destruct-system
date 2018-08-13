@@ -20,9 +20,16 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             leadingWSCount = 0;
         }
 
-        public void Visit(ArrayNode node)
+        public void Visit(OldArrayNode node)
         {
-            buffer = "Array named " + node[ArrayNode.ARR_NAME] + " with " + (node.ChildCount() - 1) + " elements.";
+            buffer = "Array named " + node[OldArrayNode.ARR_NAME] + " with " + (node.ChildCount() - 1) + " elements.";
+            PrintWithWS();
+            VisitChildren(node);
+        }
+
+        public void Visit(ArrNode node)
+        {
+            buffer = "Array found with  " + node.ChildCount() + " elements.";
             PrintWithWS();
             VisitChildren(node);
         }
@@ -69,6 +76,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             VisitChildren(node);
         }
 
+        public void Visit(RootNode node)
+        {
+            buffer = "Beginning at root node.";
+            PrintWithWS();
+            VisitChildren(node);
+        }
+
         /// <summary>
         /// Visits the children of the provided node. Adds indentation to print messages based on level in the tree.
         /// </summary>
@@ -77,12 +91,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         {
             if (node.IsChildrenNull()) return;
             int childrenCount = node.ChildCount();
-            if (childrenCount > 0) { leadingWSCount++; }
+            if (childrenCount > 0) { leadingWSCount += 2; }
             for(int i = 0; i < childrenCount; i++)
             {
                 node.Child(i).Visit(this);
             }
-            if (childrenCount == 0) { leadingWSCount--; }
+            leadingWSCount -= 2;
         }
 
         /// <summary>

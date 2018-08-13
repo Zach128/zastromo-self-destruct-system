@@ -10,7 +10,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 {
     public class PrintTreeVisitor : IZULVisitor
     {
-        public void Visit(ArrayNode node)
+        public void Visit(OldArrayNode node)
+        {
+            ToStringTree(node);
+        }
+
+        public void Visit(ArrNode node)
         {
             ToStringTree(node);
         }
@@ -41,6 +46,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         }
 
         public void Visit(NumNode node)
+        {
+            ToStringTree(node);
+        }
+
+        public void Visit(RootNode node)
         {
             ToStringTree(node);
         }

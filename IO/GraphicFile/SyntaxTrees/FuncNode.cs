@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
@@ -12,6 +13,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
     {
 
         public const int FUNC_NAME = 0;
+
+        public FuncNode(NameNode nameNode) : base(new Token(TokenType.NONE))
+        {
+            EvalType = NodeType.FUNC;
+            AddChild(nameNode);
+        }
 
         public FuncNode(ExprNode nameNode, ExprNode[] paramNode) : base(new Token(TokenType.NONE))
         {

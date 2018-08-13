@@ -19,6 +19,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
         NAME,
         ASSIGN,
         DECL,
-        FUNC
+        FUNC,
+        GLOBAL
     }
 }

@@ -10,14 +10,16 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 {
     public interface IZULVisitor
     {
-
-        void Visit(ArrayNode node);
+        
+        void Visit(OldArrayNode node);
+        void Visit(ArrNode node);
         void Visit(ArrRetNode node);
         void Visit(AssignNode node);
         void Visit(DeclNode node);
         void Visit(FuncNode node);
         void Visit(NameNode node);
         void Visit(NumNode node);
+        void Visit(RootNode node);
 
         //void Visit(ExprNode node);
 

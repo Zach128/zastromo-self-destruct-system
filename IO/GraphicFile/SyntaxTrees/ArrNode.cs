@@ -8,30 +8,35 @@ using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
-    public class ArrayNode : ExprNode
+    public class ArrNode : ExprNode
     {
 
-        public const int ARR_NAME = -1;
-
-        public ArrayNode(ExprNode nameNode, ExprNode[] elementNodes) : base(new Token(TokenType.NONE))
+        public ArrNode() : base(new Token(TokenType.NONE))
         {
             EvalType = NodeType.ARR;
-            AddChild(nameNode);
+        }
+        public ArrNode(ExprNode[] elementNodes) : base(new Token(TokenType.NONE))
+        {
+            EvalType = NodeType.ARR;
             foreach (ExprNode elem in elementNodes) AddChild(elem);
         }
-        public ArrayNode(Token token, ExprNode nameNode, ExprNode[] elementNodes) : base(token)
+        public ArrNode(Token token, ExprNode[] elementNodes) : base(token)
         {
             EvalType = NodeType.ARR;
-            AddChild(nameNode);
             foreach (ExprNode elem in elementNodes) AddChild(elem);
+        }
+
+        public void AddElement(ExprNode element)
+        {
+            AddChild(element);
         }
 
         public AST this[int index]
         {
             get
             {
-                if (index >= -1 && index < ChildCount()) return Child(index + 1);
-                else throw new IndexOutOfRangeException("Invalid index: " + index + ". min: -1, max: " + (ChildCount() - 1));
+                if (index >= 0 && index < ChildCount()) return Child(index);
+                else throw new IndexOutOfRangeException("Invalid index: " + index + ". min: 0, max: " + (ChildCount() - 1));
             }
         }
 
@@ -39,6 +44,5 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
         {
             visitor.Visit(this);
         }
-
     }
 }

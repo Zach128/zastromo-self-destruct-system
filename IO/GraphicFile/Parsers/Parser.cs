@@ -47,7 +47,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             return LT(i).type;
         }
 
-        public void Match(TokenType x)
+        public virtual void Match(TokenType x)
         {
             if (LA(1) == x) Consume();
             else throw new MatchNotFoundException("Expecting " + x.ToString() + "; found " + LT(1));

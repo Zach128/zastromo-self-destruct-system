@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees

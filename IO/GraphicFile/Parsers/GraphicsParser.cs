@@ -4,21 +4,70 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 {
-    class GraphicsParser : Parser
+    class GraphicsParser : Parser, ITreeBuilder
     {
-        public GraphicsParser(Lexer input, int k) : base(input, k)
+
+        public RootNode root;
+
+        private Stack<ExprNode> nodeTrace;
+        private ExprNode currentNode;
+
+        public GraphicsParser(Lexer input, int k = 3) : base(input, k)
         {
+            root = new RootNode();
+            currentNode = root;
+            nodeTrace = new Stack<ExprNode>();
         }
 
         public override void Parse()
         {
             while(LA(1) != TokenType.EOF)
             {
+                ExprNode _save = currentNode;
+                currentNode = root;
                 Statement();
+                currentNode = _save;
             }
+        }
+
+        public void BuildNewNode(Token token, NodeType nodeType)
+        {
+            ExprNode newNode;
+            switch(nodeType)
+            {
+                case NodeType.ARR:
+                    newNode = new OldArrayNode(new NameNode(token));
+                    break;
+                case NodeType.ARRRET:
+                    break;
+                case NodeType.ASSIGN:
+                    break;
+                case NodeType.DECL:
+                    break;
+                case NodeType.FUNC:
+                    break;
+                case NodeType.NAME:
+                    break;
+                case NodeType.STRING:
+                    break;
+                case NodeType.INTEGER:
+                case NodeType.DECIMAL:
+                case NodeType.FLOAT:
+                case NodeType.RUPE:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public ExprNode GetTree()
+        {
+            return root;
         }
 
         #region Grammar Parsing methods
@@ -39,6 +88,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
                 Method();
             }
             else throw new MatchNotFoundException("Error, failed to find valid statement; found " + LT(1) + ", " + LT(2));
+
             Match(TokenType.SEMICOLON);
         }
 
@@ -66,14 +116,29 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
         public void Declaration()
         {
             Token token = LT(1);
-            if(token.type == TokenType.NAME && LA(2) == TokenType.NAME)
+            if (token.type == TokenType.NAME && LA(2) == TokenType.NAME)
             {
+
+                DeclNode decl = new DeclNode(new NameNode(token), new NameNode(LT(2)));
+                currentNode.AddChild(decl);
+
+                ExprNode _save = currentNode;
+                currentNode = decl;
+
                 Match(TokenType.NAME);
-                Match(TokenType.NAME);
-                Match(TokenType.COLON);
-                if (LA(1) == TokenType.LCBRACK) { Array(); }
-                else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) { Method(); }
+
+                if (LA(1) == TokenType.NAME && LA(2) == TokenType.COLON)
+                {
+                    Assignment();
+                }
+                else {
+                    Match(TokenType.SEMICOLON);
+                }
+                currentNode = _save;
+                //if (LA(1) == TokenType.LCBRACK) { Array(); }
+                //else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) { Method(); }
             }
+            else throw new MatchNotFoundException("Expected TYPE and NAME; found " + LT(1).text + ", and " + LT(2).text);
         }
 
         #endregion
@@ -82,52 +147,35 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 
         public void Assignment()
         {
+
+            AssignNode assignNode = new AssignNode(new NameNode(LT(1)));
+
+            currentNode.AddChild(assignNode);
+            ExprNode _save = currentNode;
+            currentNode = assignNode;
+
             Match(TokenType.NAME);
             Match(TokenType.COLON);
             Parameter();
+
+            currentNode = root;
+
             //Console.WriteLine("Found Assignment");
         }
 
-        #endregion
-
-        #region Constructor matchers
-
-        /*
-        public void PointConstructor()
-        {
-            BasicConstructor(2);
-        }
-
-        public void LineConstructor()
-        {
-            BasicConstructor(2);
-            Console.WriteLine("Found line constructor");
-        }
-
-        public void BasicConstructor(int parameterChecks = 0)
-        {
-            Match(TokenType.NAME);
-            Match(TokenType.LRBRACK);
-
-            if (parameterChecks > 0)
-            {
-                Parameter();
-            }
-            for(int i = 1; i < parameterChecks; i++)
-            {
-                Match(TokenType.COMMA);
-                Parameter();
-            }
-
-            Match(TokenType.RRBRACK);
-        }
-        //*/
         #endregion
 
         #region Method matchers
         
         public void Method()
         {
+
+            ExprNode _save;
+            ExprNode newNode = new FuncNode(new NameNode(LT(1)));
+            currentNode.AddChild(newNode);
+            _save = currentNode;
+            currentNode = newNode;
+
             Match(TokenType.NAME);
             Match(TokenType.LRBRACK);
             if(LA(1) != TokenType.RRBRACK)
@@ -143,15 +191,63 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             }
             Match(TokenType.RRBRACK);
             //Console.WriteLine("Found method");
+
+            currentNode = _save;
+
         }
 
         public void Parameter()
         {
-            if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) { Method(); }
-            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK) { ArrayAccess(); }
-            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LCBRACK) { Array(); }
-            else if (LA(1) == TokenType.NAME) { Match(TokenType.NAME); }
-            else { Numeral("Error in parameter parsing: Expected int, float or rupe;"); }
+            ExprNode newNode;
+            ExprNode _save;
+
+            if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) {
+                newNode = new FuncNode(new NameNode(LT(1)));
+                currentNode.AddChild(newNode);
+                _save = currentNode;
+                currentNode = newNode;
+                Method();
+            }
+            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK) {
+                newNode = new ArrRetNode(new NameNode(LT(1)), new NumNode(LT(3)));
+                currentNode.AddChild(newNode);
+                _save = currentNode;
+                currentNode = newNode;
+                ArrayAccess();
+            }
+            else if (LA(1) == TokenType.LCBRACK) {
+                newNode = new ArrNode();
+                currentNode.AddChild(newNode);
+                _save = currentNode;
+                currentNode = newNode;
+                Array();
+            }
+            else if (LA(1) == TokenType.NAME) {
+                newNode = new NameNode(LT(1)); //Add child name node
+                currentNode.AddChild(newNode);
+                _save = currentNode;
+                currentNode = newNode;
+                Match(TokenType.NAME);
+            }
+            else {
+
+                TokenType type = LA(1);
+                Token token = LT(1);
+
+                if (type == TokenType.INTEGER) { Match(TokenType.INTEGER); }
+                else if (type == TokenType.FLOAT) { Match(TokenType.FLOAT); }
+                else if (type == TokenType.RUPE) { Match(TokenType.RUPE); }
+                else if (type == TokenType.DECIMAL) { Match(TokenType.DECIMAL); }
+                else throw new MatchNotFoundException("Error in parameter parsing: Expected int, float or rupe; found " + LT(1));
+
+                newNode = new NumNode(token);
+                currentNode.AddChild(newNode);
+                _save = currentNode;
+                currentNode = newNode;
+            }
+
+            currentNode = _save;
+
         }
 
         #endregion
@@ -167,6 +263,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 
         public void Elements()
         {
+
             Element();
             while (LA(1) == TokenType.COMMA)
             {
@@ -187,6 +284,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             Match(TokenType.INTEGER);
             Match(TokenType.RSBRACK);
             //Console.WriteLine("Found array access");
+        }
+
+        public override void Match(TokenType type)
+        {
+            if (LA(1) == type) Consume();
+            else throw new MatchNotFoundException("Expecting " + type.ToString() + "; found " + LT(1));
         }
 
         #endregion

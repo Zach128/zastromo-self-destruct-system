@@ -14,6 +14,18 @@ namespace TestWinBackGrnd.IO.GraphicFile
         {
         }
 
+        public IList<Token> GetTokens()
+        {
+            Stack<Token> tokens = new Stack<Token>();
+
+            do
+            {
+                tokens.Push(NextToken());
+            } while (tokens.Peek().type != TokenType.EOF);
+
+            return tokens.ToList();
+        }
+
         //Process and return token
         public override Token NextToken()
         {
