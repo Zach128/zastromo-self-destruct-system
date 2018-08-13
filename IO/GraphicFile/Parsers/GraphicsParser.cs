@@ -13,15 +13,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
     {
 
         public RootNode root;
-
-        private Stack<ExprNode> nodeTrace;
         private ExprNode currentNode;
 
         public GraphicsParser(Lexer input, int k = 3) : base(input, k)
         {
             root = new RootNode();
             currentNode = root;
-            nodeTrace = new Stack<ExprNode>();
         }
 
         public override void Parse()
