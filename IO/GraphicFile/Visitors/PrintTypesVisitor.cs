@@ -71,7 +71,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(NumNode node)
         {
-            buffer = "Number of type " + node.GetNodeTokenType().ToString() + " (" + node.getValue() + ")";
+            buffer = "Number of type " + node.GetTokenType().ToString() + " (" + node.getValue() + ")";
             PrintWithWS();
             VisitChildren(node);
         }

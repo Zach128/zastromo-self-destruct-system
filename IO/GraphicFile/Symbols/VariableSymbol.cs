@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 {
-    public class BuiltInTypeSymbol : Symbol
+    public class VariableSymbol : Symbol
     {
-        public BuiltInTypeSymbol(string name) : base(name)
+        public VariableSymbol(string name) : base(name)
         {
         }
 
-        public BuiltInTypeSymbol(string name, IType type) : base(name, type) { }
+        public VariableSymbol(string name, IType type) : base(name, type) { }
     }
 }

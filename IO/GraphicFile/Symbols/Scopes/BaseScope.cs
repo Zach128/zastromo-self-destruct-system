@@ -21,7 +21,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes
 
         public void Define(Symbol symbol)
         {
-            Define(symbol);
+            symbols.Define(symbol);
         }
 
         public IScope EnclosingScope { get; }
@@ -34,6 +34,6 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes
             return null;
         }
 
-        public string ScopeName { get; }
+        public string ScopeName => scopeName;
     }
 }

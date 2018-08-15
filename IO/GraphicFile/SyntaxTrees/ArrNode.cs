@@ -26,6 +26,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             foreach (ExprNode elem in elementNodes) AddChild(elem);
         }
 
+        public ArrNode(Token token) : base(token)
+        {
+            EvalType = NodeType.ARR;
+        }
+
         public void AddElement(ExprNode element)
         {
             AddChild(element);

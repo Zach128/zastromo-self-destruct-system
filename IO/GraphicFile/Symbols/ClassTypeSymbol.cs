@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 {
-    public class SystemType : Symbol, IType
+    class ClassTypeSymbol : Symbol, IType
     {
 
-        public SystemType(string name) : base(name) { }
+        public ClassTypeSymbol(string name) : base(name) { }
+        public string GetName() { return name; }
 
-        public string GetName()
-        {
-            return name;
-        }
     }
 }

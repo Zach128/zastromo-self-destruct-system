@@ -15,7 +15,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
         public AST (Token token) { this.token = token; }
         public AST(TokenType type) { this.token = new Token(type); }
 
-        public TokenType GetNodeTokenType() { return token.type; }
+        public TokenType GetTokenType() { return token.type; }
+        public string GetTokenName() { return token.text; }
         public bool IsNil() { return token == null; }
 
         public void AddChild (AST t)

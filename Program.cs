@@ -2,14 +2,11 @@
 using SelfDestructCommons.Model.GraphicsMessages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile;
 using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.Parsers;
+using TestWinBackGrnd.IO.GraphicFile.Symbols;
 using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
-using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 using TestWinBackGrnd.IO.GraphicFile.Visitors;
 using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
@@ -74,8 +71,11 @@ namespace WinGraphicsController
             parser.Parse();
             ExprNode ast = parser.GetTree();
             PrintTypesVisitor visitor = new PrintTypesVisitor();
+            MonoScopeVisitor symbolVisitor = new MonoScopeVisitor();
             ast.Visit(visitor);
-            
+            ast.Visit(symbolVisitor);
+            SymbolTable symbols = symbolVisitor.GetSymbolTable();
+
             Console.WriteLine("\nToken printing complete. Press any key to continue...");
             Console.ReadKey();
 

@@ -23,6 +23,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
         }
 
         public string Name => name;
+        public IType Type => type;
 
         public override string ToString()
         {

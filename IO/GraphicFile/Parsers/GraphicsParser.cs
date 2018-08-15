@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestWinBackGrnd.IO.GraphicFile.Models;
+﻿using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
 using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 
@@ -29,36 +24,6 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
                 currentNode = root;
                 Statement();
                 currentNode = _save;
-            }
-        }
-
-        public void BuildNewNode(Token token, NodeType nodeType)
-        {
-            ExprNode newNode;
-            switch(nodeType)
-            {
-                case NodeType.ARR:
-                    newNode = new OldArrayNode(new NameNode(token));
-                    break;
-                case NodeType.ARRRET:
-                    break;
-                case NodeType.ASSIGN:
-                    break;
-                case NodeType.DECL:
-                    break;
-                case NodeType.FUNC:
-                    break;
-                case NodeType.NAME:
-                    break;
-                case NodeType.STRING:
-                    break;
-                case NodeType.INTEGER:
-                case NodeType.DECIMAL:
-                case NodeType.FLOAT:
-                case NodeType.RUPE:
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -199,21 +164,18 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             ExprNode _save;
 
             if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) {
-                newNode = new FuncNode(new NameNode(LT(1)));
-                currentNode.AddChild(newNode);
                 _save = currentNode;
-                currentNode = newNode;
                 Method();
             }
             else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK) {
-                newNode = new ArrRetNode(new NameNode(LT(1)), new NumNode(LT(3)));
+                newNode = new ArrRetNode(LT(1), new NameNode(LT(1)), new NumNode(LT(3)));
                 currentNode.AddChild(newNode);
                 _save = currentNode;
                 currentNode = newNode;
                 ArrayAccess();
             }
             else if (LA(1) == TokenType.LCBRACK) {
-                newNode = new ArrNode();
+                newNode = new ArrNode(LT(1));
                 currentNode.AddChild(newNode);
                 _save = currentNode;
                 currentNode = newNode;

@@ -10,10 +10,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
     class FunctionSymbol : Symbol, IScope
     {
 
+        protected readonly SymbolTable symbols;
         protected readonly IScope enclosingScope;
 
         public FunctionSymbol(string name, IType returnType, IScope enclosingScope) : base(name, returnType)
         {
+            symbols = new SymbolTable();
         }
 
         public string ScopeName { get; }
@@ -22,12 +24,15 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 
         public void Define(Symbol symbol)
         {
-            throw new NotImplementedException();
+            symbols.Define(symbol);
         }
 
         public Symbol Resolve(string name)
         {
-            throw new NotImplementedException();
+            Symbol symbol = symbols.Resolve(name);
+            if (symbol != null) return symbol;
+            if (EnclosingScope != null) return EnclosingScope.Resolve(name);
+            return null;
         }
     }
 }
