@@ -9,7 +9,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
     public class SystemTypeSymbol : Symbol, IType
     {
 
-        public SystemTypeSymbol(string name) : base(name) { }
+        public SystemTypeSymbol(string name) : base(name) { SymbolType = PRIMITIVE_T; }
 
         public string GetName()
         {

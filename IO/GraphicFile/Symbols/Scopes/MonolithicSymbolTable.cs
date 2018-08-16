@@ -8,10 +8,10 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes
 {
     class MonolithicSymbolTable : SymbolTable, IScope
     {
-        public MonolithicSymbolTable() : base()
+        public MonolithicSymbolTable() : base(null)
         {
             ScopeName = "_global";
-
+            InitTypes(this);
         }
 
         public string ScopeName { get; }

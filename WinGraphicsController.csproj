@@ -74,6 +74,7 @@
     <Compile Include="IO\GraphicFile\Parsers\Parser.cs" />
     <Compile Include="IO\GraphicFile\Models\Token.cs" />
     <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ArrayType.cs" />
     <Compile Include="IO\GraphicFile\Symbols\ClassTypeSymbol.cs" />
     <Compile Include="IO\GraphicFile\Symbols\FunctionSymbol.cs" />
     <Compile Include="IO\GraphicFile\Symbols\ISymbolProvider.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="IO\GraphicFile\Symbols\SymbolTable.cs" />
     <Compile Include="IO\GraphicFile\Symbols\SystemTypeSymbol.cs" />
     <Compile Include="IO\GraphicFile\Symbols\VariableSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ZULAst.cs" />
     <Compile Include="IO\GraphicFile\SyntaxTrees\OldArrayNode.cs" />
     <Compile Include="IO\GraphicFile\SyntaxTrees\ArrNode.cs" />
     <Compile Include="IO\GraphicFile\SyntaxTrees\ArrRetNode.cs" />

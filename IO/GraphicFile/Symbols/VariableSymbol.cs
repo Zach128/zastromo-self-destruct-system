@@ -10,8 +10,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
     {
         public VariableSymbol(string name) : base(name)
         {
+            SymbolType = PRIMITIVE;
         }
 
-        public VariableSymbol(string name, IType type) : base(name, type) { }
+        public VariableSymbol(string name, IType type) : base(name, type) { SymbolType = PRIMITIVE; }
     }
 }

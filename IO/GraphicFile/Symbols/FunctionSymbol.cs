@@ -15,7 +15,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 
         public FunctionSymbol(string name, IType returnType, IScope enclosingScope) : base(name, returnType)
         {
-            symbols = new SymbolTable();
+            symbols = new SymbolTable(this);
+            SymbolType = FUNCTION_REF;
         }
 
         public string ScopeName { get; }

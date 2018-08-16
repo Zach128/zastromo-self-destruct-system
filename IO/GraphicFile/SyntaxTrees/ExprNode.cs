@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Symbols;
 using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
@@ -11,17 +12,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
     public abstract class ExprNode : AST
     {
 
-        public ExprNode() : base() { }
+        public ExprNode() : base(new Token(TokenType.NONE)) { }
         public ExprNode(Token token) : base(token) { }
+        
+        public NodeType EvalType { get; set; }
 
-        private NodeType evalType;
-        public NodeType EvalType
-        {
-            get
-            { return evalType; }
-            protected set
-            { evalType = value; }
-        }
+        public IType VarType;
 
         public new ExprNode Child(int index)
         {

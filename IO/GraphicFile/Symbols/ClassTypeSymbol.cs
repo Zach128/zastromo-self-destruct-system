@@ -9,7 +9,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
     class ClassTypeSymbol : Symbol, IType
     {
 
-        public ClassTypeSymbol(string name) : base(name) { }
+        public ClassTypeSymbol(string name) : base(name) { SymbolType = OBJECT; }
         public string GetName() { return name; }
 
     }

@@ -17,6 +17,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 
         public TokenType GetTokenType() { return token.type; }
         public string GetTokenName() { return token.text; }
+        public Token GetToken() { return token; }
         public bool IsNil() { return token == null; }
 
         public void AddChild (AST t)
@@ -24,7 +25,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             if (children == null) children = new List<AST>();
             children.Add(t);
         }
+
         public int ChildCount() { return children.Count; }
+
+        public List<AST> ChildrenToList()
+        {
+            return children.ToList();
+        }
 
         public override string ToString()
         { return token != null ? token.ToString() : "nil"; }

@@ -39,6 +39,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(ArrRetNode node)
         {
+
+            NameNode nameNode = (NameNode) node[ArrRetNode.ARR_NAME];
+            Symbol indexSymbol = new Symbol("index", ResolveVarType("int"));
+            ZULAst id = new ZULAst(RefLocalSymbol(nameNode.GetName()), symbolTable);
+            ZULAst index = new ZULAst(indexSymbol, symbolTable, node[ArrRetNode.INDEX].GetToken());
+
+            Console.WriteLine(symbolTable.ArrayIndex(id, index) + " returned from " + nameNode.GetName() + " array");
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -46,6 +53,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(AssignNode node)
         {
+
+            if(nodeStackTrace.Peek().EvalType == NodeType.GLOBAL)
+            {
+
+            }
+
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -56,6 +69,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             if (node[DeclNode.DEF] is NameNode)
             {
                 string name = ((NameNode)node[DeclNode.DEF]).GetName();
+                if (name == "line1")
+                    ;
                 NodeType declType = ((ExprNode)node[DeclNode.TYPE_DEF]).EvalType;
                 IType symType = ResolveVarType(node[DeclNode.TYPE_DEF].GetTokenName());
                 DefineLocalSymbol(name, symType);
@@ -68,12 +83,29 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             if (node[FuncNode.FUNC_NAME] is NameNode)
             {
                 string name = ((NameNode)node[FuncNode.FUNC_NAME]).GetName();
+                ZULAst funcSymbol = new ZULAst(RefFunction(name), symbolTable);
+                symbolTable.Call(funcSymbol, node.ArgsToList());
             }
+            PushToTrace(node);
             VisitChildren(node);
+            PopFromTrace();
         }
 
         public void Visit(NameNode node)
         {
+
+            ExprNode lastNode = nodeStackTrace.Peek();
+            if (lastNode.EvalType == NodeType.ARRRET || lastNode.EvalType == NodeType.FUNC)
+            {
+                ;
+            }
+            else {
+                
+                Symbol s = RefLocalSymbol(node.GetName());
+                if(s != null && (lastNode.EvalType == NodeType.ASSIGN || lastNode.EvalType == NodeType.FUNC))
+                    Console.WriteLine("Name reference to " + s.Name + " of type " + s.Type);
+            }
+
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -95,15 +127,30 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void DefineLocalSymbol(string name, IType type)
         {
+            if (name == "line1")
+                ;
             VariableSymbol variableSymbol = new VariableSymbol(name, type);
             symbolTable.Define(variableSymbol);
             Console.WriteLine("Defined new variable " + name);
         }
 
+        public Symbol RefLocalSymbol(string name)
+        {
+            Symbol symbol = symbolTable.Resolve(name);
+            return symbol;
+        }
+
+        public Symbol RefFunction(string name)
+        {
+            Symbol symbol = symbolTable.Resolve(name);
+            if(symbol != null) Console.WriteLine("Found function symbol: " + symbol);
+            return symbol;
+        }
+
         public IType ResolveVarType(string name)
         {
-            IType type = (IType) SymbolTable.PrimitveSymbols.Resolve(name);
-            if (type == null) type = (IType) SymbolTable.ClassSymbols.Resolve(name); ;
+            IType type = symbolTable.ResolveType(name);
+            
             return type;
         }
 

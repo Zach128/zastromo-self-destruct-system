@@ -41,6 +41,17 @@ namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
             }
         }
 
+        public List<ExprNode> ArgsToList()
+        {
+            List<ExprNode> list = new List<ExprNode>();
+            List<AST> children = ChildrenToList();
+            for(int i = 1; i < children.Count; i++)
+            {
+                list.Add((ExprNode) children[i]);
+            }
+            return list;
+        }
+
         public override void Visit(IZULVisitor visitor)
         {
             visitor.Visit(this);

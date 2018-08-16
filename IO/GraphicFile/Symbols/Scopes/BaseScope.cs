@@ -16,7 +16,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes
         {
             this.scopeName = scopeName;
             this.EnclosingScope = enclosingScope;
-            symbols = new SymbolTable();
+            symbols = new SymbolTable(this);
         }
 
         public void Define(Symbol symbol)
