@@ -8,22 +8,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
     public class SymbolTable
     {
 
-        //public static readonly SymbolTable PrimitveSymbols = new SymbolTable();
-        //public static readonly SymbolTable ClassSymbols = new SymbolTable();
-
         private readonly Dictionary<string, Symbol> symbols;
-
-        static SymbolTable()
-        {
-            //PrimitveSymbols = new SymbolTable();
-            //PrimitveSymbols.DefineSystemSymbolTypes();
-            //ClassSymbols = new SymbolTable();
-            //ClassSymbols.DefineSystemClassTypes();
-        }
+        private readonly Dictionary<string, Symbol> enumSymbols;
 
         public SymbolTable(IScope enclosingScope)
         {
             symbols = new Dictionary<string, Symbol>();
+            enumSymbols = new Dictionary<string, Symbol>();
         }
 
         public void InitTypes(IScope enclosingScope)
@@ -34,15 +25,27 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
                 DefineSystemSymbolTypes();
                 DefineSystemFunctions(enclosingScope);
                 DefineSystemVariables();
+                DefineEnums();
             }
         }
 
         public void Define(Symbol symbol) { symbols[symbol.Name] = symbol; }
+        public void DefineEnum(Symbol symbol) { enumSymbols[symbol.Name] = symbol; }
+
         public Symbol Resolve(string name)
         {
             Symbol symbol;
             symbols.TryGetValue(name, out symbol);
+            if (symbol == null) enumSymbols.TryGetValue(name, out symbol);
             return symbol;
+        }
+
+        public ConstantSymbol ResolveEnum(string name)
+        {
+            Symbol symbol;
+            enumSymbols.TryGetValue(name, out symbol);
+            if (symbol is ConstantSymbol) return (ConstantSymbol) symbol;
+            else return null;
         }
 
         public IType ResolveType(string name)
@@ -53,23 +56,27 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
             if (symbol is ClassTypeSymbol) return (ClassTypeSymbol)symbol;
             else if (symbol is SystemTypeSymbol) return (SystemTypeSymbol)symbol;
             else if (symbol is FunctionSymbol) return symbol.Type;
+            else if (symbol is ArrayType) return symbol.Type;
             else return null;
         }
 
         public IType ArrayIndex(ZULAst id, ZULAst index)
         {
             Symbol s = id.scope.Resolve(id.symbol.Name);
-            VariableSymbol vs = (VariableSymbol)s;
+            ArrayType vs = (ArrayType)s;
             id.symbol = vs;
-            return vs.Type;
+            return vs.ElementType;
         }
 
-        public IType Call(ZULAst id, List<ExprNode> args)
+        public FunctionSymbol Call(ZULAst id, List<ExprNode> args)
         {
-            Symbol s = id.scope.Resolve(id.symbol.Name);
-            FunctionSymbol fs = (FunctionSymbol)s;
+            FunctionSymbol fs = (FunctionSymbol)id.scope.Resolve(id.symbol.Name);
             id.symbol = fs;
-            return fs.Type;
+            if(fs.ArgCount == args.Count)
+            {
+                return fs;
+            }
+            return null;
         }
 
         public override string ToString()
@@ -97,12 +104,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 
         private void DefineSystemFunctions(IScope enclosingScope)
         {
-            Define(new FunctionSymbol("line", ResolveType("line"), enclosingScope));
-            Define(new FunctionSymbol("linesplt", ResolveType("point"), enclosingScope));
-            Define(new FunctionSymbol("point", ResolveType("point"), enclosingScope));
-            Define(new FunctionSymbol("pen", ResolveType("pen"), enclosingScope));
-            Define(new FunctionSymbol("draw", ResolveType("void"), enclosingScope));
-            Define(new FunctionSymbol("drawPoly", ResolveType("void"), enclosingScope));
+            Define(new FunctionSymbol("line", ResolveType("line"), 2, enclosingScope));
+            Define(new FunctionSymbol("linesplt", ResolveType("point"), 2, enclosingScope));
+            Define(new FunctionSymbol("point", ResolveType("point"), 2, enclosingScope));
+            Define(new FunctionSymbol("pen", ResolveType("pen"), 2, enclosingScope));
+            Define(new FunctionSymbol("draw", ResolveType("void"), 1, enclosingScope));
+            Define(new FunctionSymbol("drawPoly", ResolveType("void"), 1, enclosingScope));
         }
 
         private void DefineSystemVariables()
@@ -110,6 +117,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
             Define(new VariableSymbol("VER", ResolveType("decimal")));
             Define(new VariableSymbol("renderMode", ResolveType("string")));
             Define(new VariableSymbol("basePen", ResolveType("pen")));
+        }
+
+        private void DefineEnums()
+        {
+            DefineEnum(new ConstantSymbol("ORANGE", ResolveType("string"), "#ff6c00"));
+            DefineEnum(new ConstantSymbol("ORANGE_RED", ResolveType("string"), "#ff3300"));
         }
 
     }

@@ -15,6 +15,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Symbols
         public const int FUNCTION_REF = 3;
         public const int PRIMITIVE_T = 4;
         public const int ARRAY = 5;
+        public const int CONSTANT = 6;
 
         protected readonly string name;
         private readonly IType type;

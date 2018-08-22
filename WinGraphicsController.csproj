@@ -67,7 +67,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\GraphicFile\Interpreters\ZULInterpreter.cs" />
     <Compile Include="IO\GraphicFile\GraphicsLexer.cs" />
+    <Compile Include="IO\GraphicFile\Models\Line.cs" />
+    <Compile Include="IO\GraphicFile\Models\ZPen.cs" />
+    <Compile Include="IO\GraphicFile\Models\ZPoint.cs" />
+    <Compile Include="IO\GraphicFile\Models\Rupe.cs" />
     <Compile Include="IO\GraphicFile\Parsers\GraphicsParser.cs" />
     <Compile Include="IO\GraphicFile\Lexer.cs" />
     <Compile Include="IO\GraphicFile\MatchNotFoundException.cs" />
@@ -76,6 +81,7 @@
     <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
     <Compile Include="IO\GraphicFile\Symbols\ArrayType.cs" />
     <Compile Include="IO\GraphicFile\Symbols\ClassTypeSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ConstantSymbol.cs" />
     <Compile Include="IO\GraphicFile\Symbols\FunctionSymbol.cs" />
     <Compile Include="IO\GraphicFile\Symbols\ISymbolProvider.cs" />
     <Compile Include="IO\GraphicFile\Symbols\Scopes\ArrayScope.cs" />
@@ -108,6 +114,7 @@
     <Compile Include="IO\GraphicFile\Visitors\PrintTreeVisitor.cs" />
     <Compile Include="IO\GraphicFile\Visitors\PrintTypesVisitor.cs" />
     <Compile Include="IO\GraphicFile\Visitors\SymbolScopeVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Interpreters\Interpreter.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

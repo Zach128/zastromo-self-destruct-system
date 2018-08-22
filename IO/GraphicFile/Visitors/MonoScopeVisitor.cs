@@ -32,6 +32,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(ArrNode node)
         {
+
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -54,11 +55,6 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         public void Visit(AssignNode node)
         {
 
-            if(nodeStackTrace.Peek().EvalType == NodeType.GLOBAL)
-            {
-
-            }
-
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -69,8 +65,6 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             if (node[DeclNode.DEF] is NameNode)
             {
                 string name = ((NameNode)node[DeclNode.DEF]).GetName();
-                if (name == "line1")
-                    ;
                 NodeType declType = ((ExprNode)node[DeclNode.TYPE_DEF]).EvalType;
                 IType symType = ResolveVarType(node[DeclNode.TYPE_DEF].GetTokenName());
                 DefineLocalSymbol(name, symType);
@@ -97,13 +91,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             ExprNode lastNode = nodeStackTrace.Peek();
             if (lastNode.EvalType == NodeType.ARRRET || lastNode.EvalType == NodeType.FUNC)
             {
-                ;
             }
             else {
                 
                 Symbol s = RefLocalSymbol(node.GetName());
                 if(s != null && (lastNode.EvalType == NodeType.ASSIGN || lastNode.EvalType == NodeType.FUNC))
                     Console.WriteLine("Name reference to " + s.Name + " of type " + s.Type);
+                
             }
 
             PushToTrace(node);
@@ -127,10 +121,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void DefineLocalSymbol(string name, IType type)
         {
-            if (name == "line1")
-                ;
-            VariableSymbol variableSymbol = new VariableSymbol(name, type);
-            symbolTable.Define(variableSymbol);
+            Symbol symbol;
+            if (type.GetName() == "arr")
+                symbol = new ArrayType(name, type);
+            else
+                symbol = new VariableSymbol(name, type);
+            symbolTable.Define(symbol);
             Console.WriteLine("Defined new variable " + name);
         }
 

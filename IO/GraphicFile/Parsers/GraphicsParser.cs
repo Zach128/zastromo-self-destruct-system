@@ -10,6 +10,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
         public RootNode root;
         private ExprNode currentNode;
 
+        private string AssignedName = "";
+
+
         public GraphicsParser(Lexer input, int k = 3) : base(input, k)
         {
             root = new RootNode();
@@ -43,7 +46,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             }
             else if (LA(1) == TokenType.NAME && LA(2) == TokenType.COLON)
             {
+                AssignedName = LT(1).text;
                 Assignment();
+                AssignedName = "";
             }
             else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK)
             {
@@ -91,7 +96,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 
                 if (LA(1) == TokenType.NAME && LA(2) == TokenType.COLON)
                 {
+                    AssignedName = LT(1).text;
                     Assignment();
+                    AssignedName = "";
                 }
                 else {
                     Match(TokenType.SEMICOLON);
@@ -116,9 +123,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             ExprNode _save = currentNode;
             currentNode = assignNode;
 
+            Token assignedToken = LT(1);
+
             Match(TokenType.NAME);
             Match(TokenType.COLON);
-            Parameter();
+            Parameter(assignedToken);
 
             currentNode = root;
 
@@ -138,16 +147,18 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             _save = currentNode;
             currentNode = newNode;
 
+            Token assignedToken = LT(1);
+
             Match(TokenType.NAME);
             Match(TokenType.LRBRACK);
             if(LA(1) != TokenType.RRBRACK)
             {
-                Parameter();
+                Parameter(assignedToken);
                 //Console.WriteLine("Found param");
                 while (LA(1) == TokenType.COMMA)
                 {
                     Match(TokenType.COMMA);
-                    Parameter();
+                    Parameter(assignedToken);
                     //Console.WriteLine("Found param");
                 }
             }
@@ -158,37 +169,44 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 
         }
 
-        public void Parameter()
+        public void Parameter(Token destination)
         {
             ExprNode newNode;
             ExprNode _save;
 
-            if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK) {
+            if (LA(1) == TokenType.NAME && LA(2) == TokenType.LRBRACK)
+            {
                 _save = currentNode;
                 Method();
             }
-            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK) {
+            else if (LA(1) == TokenType.NAME && LA(2) == TokenType.LSBRACK)
+            {
                 newNode = new ArrRetNode(LT(1), new NameNode(LT(1)), new NumNode(LT(3)));
                 currentNode.AddChild(newNode);
                 _save = currentNode;
                 currentNode = newNode;
                 ArrayAccess();
             }
-            else if (LA(1) == TokenType.LCBRACK) {
-                newNode = new ArrNode(LT(1));
+            else if (LA(1) == TokenType.LCBRACK)
+            {
+                if(destination != null && destination.type == TokenType.NAME) newNode = new ArrNode(destination);
+                else newNode = new ArrNode(LT(1));
+
                 currentNode.AddChild(newNode);
                 _save = currentNode;
                 currentNode = newNode;
                 Array();
             }
-            else if (LA(1) == TokenType.NAME) {
+            else if (LA(1) == TokenType.NAME)
+            {
                 newNode = new NameNode(LT(1)); //Add child name node
                 currentNode.AddChild(newNode);
                 _save = currentNode;
                 currentNode = newNode;
                 Match(TokenType.NAME);
             }
-            else {
+            else
+            {
 
                 TokenType type = LA(1);
                 Token token = LT(1);
@@ -206,9 +224,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             }
 
             currentNode = _save;
-
         }
-
+        
+        public void Parameter()
+        {
+            Parameter(null);
+        }
+        //*/
         #endregion
 
         #region Array matchers

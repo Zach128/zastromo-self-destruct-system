@@ -5,14 +5,14 @@ VER : 0.1;
 //Data
 //Octagon shape
 arr octPoints : {
-point(37.5rp, 87.5rp),
-point(62.5rp, 87.5rp),
-point(87.5rp, 62.5rp),
-point(87.5rp, 37.5rp),
-point(62.5rp, 12.5rp),
-point(37.5rp, 12.5rp),
-point(12.5rp, 37.5rp),
-point(12.5rp, 62.5rp)
+point(37.5f, 87.5f),
+point(62.5f, 87.5f),
+point(87.5f, 62.5f),
+point(87.5f, 37.5f),
+point(62.5f, 12.5f),
+point(37.5f, 12.5f),
+point(12.5f, 37.5f),
+point(12.5f, 62.5f)
 };
 
 //Cross line 1

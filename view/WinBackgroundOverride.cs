@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Svg;
 using TestWinBackGrnd.Properties;
+using TestWinBackGrnd.IO.GraphicFile;
+using TestWinBackGrnd.IO.GraphicFile.Parsers;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
+using TestWinBackGrnd.IO.GraphicFile.Interpreters;
 
 namespace WinGraphicsController.view
 {
@@ -120,6 +124,23 @@ namespace WinGraphicsController.view
                     g.DrawLine(new Pen(Color.Orange, 10f), x2Begin, x2End);
                     
                     g.DrawPolygon(new Pen(Color.OrangeRed, 10f), octPoints);
+                }
+            }));
+        }
+        
+        public void NewDrawWarning()
+        {
+            UseWorkerWDC(new DeviceContextUsage(dc =>
+            {
+                using (Graphics g = Graphics.FromHdc(dc))
+                {
+                    GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
+                    GraphicsParser parser = new GraphicsParser(parsersLexer);
+                    parser.Parse();
+                    MonoScopeVisitor symbolVisitor = new MonoScopeVisitor();
+                    parser.GetTree().Visit(symbolVisitor);
+                    ZULInterpreter interpreter = new ZULInterpreter(symbolVisitor.GetSymbolTable(), g);
+                    parser.GetTree().Visit(interpreter);
                 }
             }));
         }

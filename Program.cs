@@ -3,6 +3,7 @@ using SelfDestructCommons.Model.GraphicsMessages;
 using System;
 using System.Collections.Generic;
 using TestWinBackGrnd.IO.GraphicFile;
+using TestWinBackGrnd.IO.GraphicFile.Interpreters;
 using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.Parsers;
 using TestWinBackGrnd.IO.GraphicFile.Symbols;
@@ -39,9 +40,12 @@ namespace WinGraphicsController
 
             //Testing
 
-            //string testDataArrayDec = "arr octPoints : {point(37.5rp, 87.5rp),point(62.5rp, 87.5rp),point(87.5rp, 62.5rp),point(87.5rp, 37.5rp),point(62.5rp, 12.5rp),point(37.5rp, 12.5rp),point(12.5rp, 37.5rp),point(12.5rp, 62.5rp)};";
-            //string testDataLineDec = "line line1: line(linesplt(octPoints[0], octPoints[7]), linesplt(octPoints[3], octPoints[4]));";
-            //string testDataAssign = "basePen : pen(ORANGE, 10f);";
+            Instance.winOverride.NewDrawWarning();
+
+            /*
+            string testDataArrayDec = "arr octPoints : {point(37.5rp, 87.5rp),point(62.5rp, 87.5rp),point(87.5rp, 62.5rp),point(87.5rp, 37.5rp),point(62.5rp, 12.5rp),point(37.5rp, 12.5rp),point(12.5rp, 37.5rp),point(12.5rp, 62.5rp)};";
+            string testDataLineDec = "line line1: line(linesplt(octPoints[0], octPoints[7]), linesplt(octPoints[3], octPoints[4]));";
+            string testDataAssign = "basePen : pen(ORANGE, 10f);";
 
             GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             List<Token> tokens = (List<Token>) lexer.GetTokens();
@@ -75,6 +79,10 @@ namespace WinGraphicsController
             ast.Visit(visitor);
             ast.Visit(symbolVisitor);
             SymbolTable symbols = symbolVisitor.GetSymbolTable();
+
+            ZULInterpreter interpreter = new ZULInterpreter(symbols);
+            ast.Visit(interpreter);
+            //*/
 
             Console.WriteLine("\nToken printing complete. Press any key to continue...");
             Console.ReadKey();

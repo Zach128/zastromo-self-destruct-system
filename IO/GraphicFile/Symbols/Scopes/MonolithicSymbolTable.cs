@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes
 {
-    class MonolithicSymbolTable : SymbolTable, IScope
+    public class MonolithicSymbolTable : SymbolTable, IScope
     {
         public MonolithicSymbolTable() : base(null)
         {
