@@ -1,6 +1,6 @@
 VER : 0.1;
 
-//This is a early placeholder for the zastromo underlay drawing system (codenamed Z.U.L.).
+//This is an early test script for the zastromo underlay drawing system (codenamed Z.U.L.).
 
 //Data
 //Octagon shape
@@ -14,6 +14,8 @@ point(37.5f, 12.5f),
 point(12.5f, 37.5f),
 point(12.5f, 62.5f)
 };
+
+//octPoints[0] : point(99.9f, 99.9f);
 
 //Cross line 1
 line line1 : line(
@@ -30,7 +32,7 @@ linesplt(octPoints[5], octPoints[6])
 renderMode : SMOOTH_HIGH;
 
 //Setting the pen to a thin orange pen
-basePen : pen(ORANGE, 10f);
+basePen : pen(ORANGE, 7.5f);
 draw(line1);
 draw(line2);
 

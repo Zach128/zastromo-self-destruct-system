@@ -40,13 +40,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(ArrRetNode node)
         {
-
             NameNode nameNode = (NameNode) node[ArrRetNode.ARR_NAME];
-            Symbol indexSymbol = new Symbol("index", ResolveVarType("int"));
-            ZULAst id = new ZULAst(RefLocalSymbol(nameNode.GetName()), symbolTable);
-            ZULAst index = new ZULAst(indexSymbol, symbolTable, node[ArrRetNode.INDEX].GetToken());
-
-            Console.WriteLine(symbolTable.ArrayIndex(id, index) + " returned from " + nameNode.GetName() + " array");
+            Console.WriteLine(symbolTable.ArrayIndex(nameNode.GetName()) + " returned from " + nameNode.GetName() + " array");
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -74,12 +69,6 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
 
         public void Visit(FuncNode node)
         {
-            if (node[FuncNode.FUNC_NAME] is NameNode)
-            {
-                string name = ((NameNode)node[FuncNode.FUNC_NAME]).GetName();
-                ZULAst funcSymbol = new ZULAst(RefFunction(name), symbolTable);
-                symbolTable.Call(funcSymbol, node.ArgsToList());
-            }
             PushToTrace(node);
             VisitChildren(node);
             PopFromTrace();
@@ -88,12 +77,14 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         public void Visit(NameNode node)
         {
 
+            //Check if the previous node was an array access or function node. If so, do nothing
             ExprNode lastNode = nodeStackTrace.Peek();
             if (lastNode.EvalType == NodeType.ARRRET || lastNode.EvalType == NodeType.FUNC)
             {
             }
             else {
                 
+                //Output the symbol referenced by the node
                 Symbol s = RefLocalSymbol(node.GetName());
                 if(s != null && (lastNode.EvalType == NodeType.ASSIGN || lastNode.EvalType == NodeType.FUNC))
                     Console.WriteLine("Name reference to " + s.Name + " of type " + s.Type);
@@ -119,6 +110,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             PopFromTrace();
         }
 
+        /// <summary>
+        /// Define a new symbol in the symbol table.
+        /// </summary>
+        /// <param name="name">The name of the new symbol.</param>
+        /// <param name="type">The return type of the symbol.</param>
         public void DefineLocalSymbol(string name, IType type)
         {
             Symbol symbol;
@@ -130,12 +126,24 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             Console.WriteLine("Defined new variable " + name);
         }
 
+        /// <summary>
+        /// Wrapper method for SymbolTable.Resolve.
+        /// Resolves a variable-type symbol from the symbol table.
+        /// </summary>
+        /// <param name="name">The name of the symbol to be resolved.</param>
+        /// <returns>The returned symbol from SymbolTable.Resolve</returns>
         public Symbol RefLocalSymbol(string name)
         {
             Symbol symbol = symbolTable.Resolve(name);
             return symbol;
         }
 
+        /// <summary>
+        /// Wrapper method for SymbolTable.Resolve.
+        /// Resolves a function symbol from the symbol table.
+        /// </summary>
+        /// <param name="name">The name of the symbol to resolve.</param>
+        /// <returns>The function symbol returned, abstracted as a Symbol object.</returns>
         public Symbol RefFunction(string name)
         {
             Symbol symbol = symbolTable.Resolve(name);
@@ -143,10 +151,14 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
             return symbol;
         }
 
+        /// <summary>
+        /// Resolve a type symbol from the symbol table.
+        /// </summary>
+        /// <param name="name">The name of the type to resolve.</param>
+        /// <returns>A symbol of type IType depending on what was found in the symbol table.</returns>
         public IType ResolveVarType(string name)
         {
             IType type = symbolTable.ResolveType(name);
-            
             return type;
         }
 
@@ -173,7 +185,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         /// <summary>
         /// Visits the children of the provided node. Adds indentation to print messages based on level in the tree.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The parent node to visit.</param>
         private void VisitChildren(ExprNode node)
         {
             if (node.IsChildrenNull()) return;

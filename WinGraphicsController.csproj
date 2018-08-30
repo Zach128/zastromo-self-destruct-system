@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\GraphicFile\Exceptions\UnsupportedVersionException.cs" />
     <Compile Include="IO\GraphicFile\Interpreters\ZULInterpreter.cs" />
     <Compile Include="IO\GraphicFile\GraphicsLexer.cs" />
     <Compile Include="IO\GraphicFile\Models\Line.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="IO\GraphicFile\Models\Rupe.cs" />
     <Compile Include="IO\GraphicFile\Parsers\GraphicsParser.cs" />
     <Compile Include="IO\GraphicFile\Lexer.cs" />
-    <Compile Include="IO\GraphicFile\MatchNotFoundException.cs" />
+    <Compile Include="IO\GraphicFile\Exceptions\MatchNotFoundException.cs" />
     <Compile Include="IO\GraphicFile\Parsers\Parser.cs" />
     <Compile Include="IO\GraphicFile\Models\Token.cs" />
     <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
@@ -113,7 +114,6 @@
     <Compile Include="IO\GraphicFile\Visitors\MonoScopeVisitor.cs" />
     <Compile Include="IO\GraphicFile\Visitors\PrintTreeVisitor.cs" />
     <Compile Include="IO\GraphicFile\Visitors\PrintTypesVisitor.cs" />
-    <Compile Include="IO\GraphicFile\Visitors\SymbolScopeVisitor.cs" />
     <Compile Include="IO\GraphicFile\Interpreters\Interpreter.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Svg\SvgParser.cs" />
     <Compile Include="view\ScreenGraphics.cs" />
     <Compile Include="view\WinBackgroundOverride.cs" />
+    <Compile Include="ZULMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

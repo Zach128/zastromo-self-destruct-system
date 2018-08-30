@@ -100,7 +100,8 @@ namespace TestWinBackGrnd.IO.GraphicFile.Visitors
         }
 
         /// <summary>
-        /// Prints the contents of the <C>buffer</C> to the Console with leading whitespace based on the value of <c>leadingWSCount</c>.
+        /// Prints the contents of the <C>buffer</C> to the Console.
+        /// Printed values are indented with leading whitespace based on the value of <c>leadingWSCount</c>.
         /// </summary>
         public void PrintWithWS()
         {

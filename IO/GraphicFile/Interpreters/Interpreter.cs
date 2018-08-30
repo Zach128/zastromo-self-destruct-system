@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestWinBackGrnd.IO.GraphicFile.Exceptions;
 using TestWinBackGrnd.IO.GraphicFile.Models;
 using TestWinBackGrnd.IO.GraphicFile.Symbols;
 using TestWinBackGrnd.IO.GraphicFile.Symbols.Scopes;
@@ -19,6 +21,12 @@ namespace TestWinBackGrnd.IO.GraphicFile.Interpreters
         public MonolithicSymbolTable SymbolTable;
         //Stores values of symbols in symbol table
         public Dictionary<string, Object> values;
+
+        private double version_supported = 0.1;
+
+        public const string UnsupportedVersionMessage = "VER field specifies a version unsupported by this interpreter. Convert the script to a supported version or change the interpreter to a matching supported version.";
+
+        public double VERSION_SUPPORTED { get => version_supported; protected set => version_supported = value; }
 
         public Interpreter(SymbolTable symbolTable)
         {
@@ -145,13 +153,34 @@ namespace TestWinBackGrnd.IO.GraphicFile.Interpreters
         /// <param name="node">The root node in the assignment subtree. Must contain a NameNode and a not-null ExprNode as the new value.</param>
         public void Assign(AssignNode node)
         {
-            //Get the name of the value to be assigned
-            string name = ((NameNode)node[AssignNode.SUBJECT]).GetName();
+            ExprNode subject = (ExprNode) node[AssignNode.SUBJECT];
 
-            //Try to parse the new value of the object
-            object value = ParseValue((ExprNode) node[AssignNode.NEW_VALUE]);
+            if(subject is NameNode)
+            {
+                //Get the name of the value to be assigned
+                string name = ((NameNode)subject).GetName();
 
-            values[name] = value;
+                //Try to parse the new value of the object
+                object value = ParseValue((ExprNode)node[AssignNode.NEW_VALUE]);
+
+                CheckForSystemVar(name, value);
+
+                values[name] = value;
+            } else if(subject is ArrRetNode)
+            {
+                //Get the name of the array to be updated
+                string name = ((NameNode)subject).GetName();
+                //Try get the index to be used in updating the array
+                NumNode indexNode = ((NumNode)subject);
+                int.TryParse(indexNode.getValue(), out int index);
+
+                //Try to parse the new value of the array element
+                List<object> array = (List<object>) ParseValue((ExprNode)node[AssignNode.NEW_VALUE]);
+
+                //Update the array element
+                array[index] = ParseValue((ExprNode) node[AssignNode.NEW_VALUE]);
+
+            }
         }
 
         /// <summary>
@@ -177,7 +206,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Interpreters
                     return ParseArrayElement((ArrRetNode) node);
                 case NodeType.DECIMAL:
                     //Converts the node to a decimal value
-                    return Convert.ToDecimal(((NumNode)node).getValue());
+                    return Convert.ToDouble(((NumNode)node).getValue());
                 case NodeType.FLOAT:
                     //Get the string value of the float node
                     string sFloat = ((NumNode)node).getValue();
@@ -245,6 +274,52 @@ namespace TestWinBackGrnd.IO.GraphicFile.Interpreters
         }
 
         /// <summary>
+        /// Processes a variable to identify if it is a system variable or not, and executes instructions related to the variable.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <param name="val">The value of the variable.</param>
+        /// <returns>Returns whether the variable is a system variable or not.</returns>
+        public bool CheckForSystemVar(string name, object val)
+        {
+            switch(name)
+            {
+                //Version-checking subsection.
+                case "VER":
+                    double verId;
+                    if(val is double)
+                    {
+                        verId = (double) val;
+                        //Check if the version number equals this interpreters version number.
+                        if (verId != VERSION_SUPPORTED)
+                        {
+                            //If it doesn't, throw an exception
+                            throw new UnsupportedVersionException(UnsupportedVersionMessage, VERSION_SUPPORTED.ToString(), verId.ToString());
+                        }
+                    }
+                    break;
+
+                default:
+                    //Call a dispatch method to check if the variable is defined in an inheriting child interpreter.
+                    ProcessSpecificSystemVar(name, val);
+                    break;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Dispatch method for inheriting interpreter classes to override.
+        /// Used to check for system-specific predeclared fields which may be important to initialising the interpreter environmtent.
+        /// </summary>
+        /// <param name="name">The name of the field to be parsed.</param>
+        /// <param name="val">The value of the field to be parsed.</param>
+        /// <returns></returns>
+        public virtual bool ProcessSpecificSystemVar(string name, object val)
+        {
+            return false;
+        }
+
+        /// <summary>
         /// Virtual function to be used by inheriting subclasses to process language-specific methods.
         /// </summary>
         /// <param name="function">The function symbol to be processed,
@@ -287,7 +362,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Interpreters
                     //Determine if the argument is a generic Type, used in identifying collections later on
                     bool argGeneric = symbol.ArgAt(i).GetType().IsGenericType;
 
-                    //If the symbol does not match the expected type and is not a generic type, the signature is invalid
+                    //If the symbol does not match the expected type and is not a generic type, the signature is invalid.
+                    //This check is performed since List/array-type objects are considered generic types and must be compared by genericTypeDefinition
+                    //but non-generic objects/primitives do not have this field, resulting in an exception.
                     if (symbol.ArgAt(i).GetType() != types[i] && !argGeneric)
                     {
                         return false;

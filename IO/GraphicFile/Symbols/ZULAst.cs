@@ -10,6 +10,7 @@ using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Symbols
 {
+    [Obsolete("Not ideal for use. Remnant of alpha development of v0.1")]
     public class ZULAst : ExprNode
     {
 

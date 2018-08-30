@@ -8,6 +8,7 @@ using TestWinBackGrnd.IO.GraphicFile.Visitors;
 
 namespace TestWinBackGrnd.IO.GraphicFile.SyntaxTrees
 {
+    [Obsolete("Unsupported, replaced by ArrNode.")]
     public class OldArrayNode : ExprNode
     {
 

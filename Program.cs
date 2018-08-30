@@ -38,15 +38,11 @@ namespace WinGraphicsController
 
             Instance.winOverride = new WinBackgroundOverride();
 
-            //Testing
-
             Instance.winOverride.NewDrawWarning();
+            Console.WriteLine("\nExecution complete.");
+            Console.ReadKey();
 
             /*
-            string testDataArrayDec = "arr octPoints : {point(37.5rp, 87.5rp),point(62.5rp, 87.5rp),point(87.5rp, 62.5rp),point(87.5rp, 37.5rp),point(62.5rp, 12.5rp),point(37.5rp, 12.5rp),point(12.5rp, 37.5rp),point(12.5rp, 62.5rp)};";
-            string testDataLineDec = "line line1: line(linesplt(octPoints[0], octPoints[7]), linesplt(octPoints[3], octPoints[4]));";
-            string testDataAssign = "basePen : pen(ORANGE, 10f);";
-
             GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
             List<Token> tokens = (List<Token>) lexer.GetTokens();
             Token t = tokens[tokens.Count - 1];
@@ -70,22 +66,9 @@ namespace WinGraphicsController
                 tokens.Remove(t);
             }
 
-            GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
-            GraphicsParser parser = new GraphicsParser(parsersLexer);
-            parser.Parse();
-            ExprNode ast = parser.GetTree();
-            PrintTypesVisitor visitor = new PrintTypesVisitor();
-            MonoScopeVisitor symbolVisitor = new MonoScopeVisitor();
-            ast.Visit(visitor);
-            ast.Visit(symbolVisitor);
-            SymbolTable symbols = symbolVisitor.GetSymbolTable();
-
-            ZULInterpreter interpreter = new ZULInterpreter(symbols);
-            ast.Visit(interpreter);
-            //*/
-
             Console.WriteLine("\nToken printing complete. Press any key to continue...");
             Console.ReadKey();
+            //*/
 
             /*
             Instance.StartClient();
@@ -127,7 +110,7 @@ namespace WinGraphicsController
                 case BKG_ACTION.SHW_WRN:
                     try
                     {
-                        winOverride.DrawWarningOnBkg();
+                        winOverride.NewDrawWarning();
                         return BKG_RESPONSE.MSG_OK;
                     }
                     catch (Exception e)

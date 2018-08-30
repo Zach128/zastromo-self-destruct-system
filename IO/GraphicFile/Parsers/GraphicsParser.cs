@@ -4,6 +4,9 @@ using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees.PrimNodes;
 
 namespace TestWinBackGrnd.IO.GraphicFile.Parsers
 {
+    /// <summary>
+    /// Uses a Lexer to parse its token stream and construct a syntax tree representation.
+    /// </summary>
     class GraphicsParser : Parser, ITreeBuilder
     {
 
@@ -19,6 +22,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             currentNode = root;
         }
 
+        /// <summary>
+        /// Begin parsing the Tokens present in the input Lexer.
+        /// </summary>
         public override void Parse()
         {
             while(LA(1) != TokenType.EOF)
@@ -35,13 +41,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             return root;
         }
 
-        #region Grammar Parsing methods
-
+        /// <summary>
+        /// Parse a line of tokens.
+        /// </summary>
         public void Statement()
         {
             if (LA(1) == TokenType.NAME && LA(2) == TokenType.NAME)
             {
-                //Console.WriteLine("Found declaration");
                 Declaration();
             }
             else if (LA(1) == TokenType.NAME && LA(2) == TokenType.COLON)
@@ -59,11 +65,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             Match(TokenType.SEMICOLON);
         }
 
-        #endregion
-
-        #region Variable matchers
-
-        public void Numeral (string errorMsg = "Error: Expected int, float or rupe;")
+        /// <summary>
+        /// Parse a number.
+        /// </summary>
+        /// <param name="errorMsg"></param>
+        public void Numeral ()
         {
 
             TokenType type = LA(1);
@@ -72,14 +78,13 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             else if (type == TokenType.FLOAT) { Match(TokenType.FLOAT); }
             else if (type == TokenType.RUPE) { Match(TokenType.RUPE); }
             else if (type == TokenType.DECIMAL) { Match(TokenType.DECIMAL); }
-            else throw new MatchNotFoundException(errorMsg + " Found " + LT(1));
+            else throw new MatchNotFoundException("Error: Expected int, float or rupe; found " + LT(1));
 
         }
 
-        #endregion
-
-        #region Declaration matchers
-
+        /// <summary>
+        /// Parse a declaration.
+        /// </summary>
         public void Declaration()
         {
             Token token = LT(1);
@@ -110,10 +115,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             else throw new MatchNotFoundException("Expected TYPE and NAME; found " + LT(1).text + ", and " + LT(2).text);
         }
 
-        #endregion
-
-        #region Assignment matchers
-
+        /// <summary>
+        /// Parse an assignment.
+        /// </summary>
         public void Assignment()
         {
 
@@ -130,14 +134,11 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             Parameter(assignedToken);
 
             currentNode = root;
-
-            //Console.WriteLine("Found Assignment");
         }
 
-        #endregion
-
-        #region Method matchers
-        
+        /// <summary>
+        /// Parse a method call.
+        /// </summary>
         public void Method()
         {
 
@@ -154,21 +155,22 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             if(LA(1) != TokenType.RRBRACK)
             {
                 Parameter(assignedToken);
-                //Console.WriteLine("Found param");
                 while (LA(1) == TokenType.COMMA)
                 {
                     Match(TokenType.COMMA);
                     Parameter(assignedToken);
-                    //Console.WriteLine("Found param");
                 }
             }
             Match(TokenType.RRBRACK);
-            //Console.WriteLine("Found method");
 
             currentNode = _save;
 
         }
 
+        /// <summary>
+        /// Parse a parameter/value-returning expression.
+        /// </summary>
+        /// <param name="destination"></param>
         public void Parameter(Token destination)
         {
             ExprNode newNode;
@@ -211,11 +213,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
                 TokenType type = LA(1);
                 Token token = LT(1);
 
-                if (type == TokenType.INTEGER) { Match(TokenType.INTEGER); }
-                else if (type == TokenType.FLOAT) { Match(TokenType.FLOAT); }
-                else if (type == TokenType.RUPE) { Match(TokenType.RUPE); }
-                else if (type == TokenType.DECIMAL) { Match(TokenType.DECIMAL); }
-                else throw new MatchNotFoundException("Error in parameter parsing: Expected int, float or rupe; found " + LT(1));
+                Numeral();
 
                 newNode = new NumNode(token);
                 currentNode.AddChild(newNode);
@@ -226,15 +224,17 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             currentNode = _save;
         }
         
+        /// <summary>
+        /// Parse a parameter/value-returning expression.
+        /// </summary>
         public void Parameter()
         {
             Parameter(null);
         }
-        //*/
-        #endregion
 
-        #region Array matchers
-
+        /// <summary>
+        /// Parse an array initialiser.
+        /// </summary>
         public void Array()
         {
             Match(TokenType.LCBRACK);
@@ -242,6 +242,9 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             Match(TokenType.RCBRACK);
         }
 
+        /// <summary>
+        /// Parse an array of comma-separated elements.
+        /// </summary>
         public void Elements()
         {
 
@@ -253,27 +256,34 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             }
         }
         
+        /// <summary>
+        /// Wrapper method for the method Parameter
+        /// </summary>
         public void Element()
         {
             Parameter();
         }
 
+        /// <summary>
+        /// Parse an array access.
+        /// </summary>
         public void ArrayAccess()
         {
             Match(TokenType.NAME);
             Match(TokenType.LSBRACK);
             Match(TokenType.INTEGER);
             Match(TokenType.RSBRACK);
-            //Console.WriteLine("Found array access");
         }
 
+        /// <summary>
+        /// Match the next token to an expected token and move forward the stream if consumed.
+        /// </summary>
+        /// <param name="type">The token type expected to be encountered.</param>
         public override void Match(TokenType type)
         {
             if (LA(1) == type) Consume();
             else throw new MatchNotFoundException("Expecting " + type.ToString() + "; found " + LT(1));
         }
-
-        #endregion
-
+        
     }
 }

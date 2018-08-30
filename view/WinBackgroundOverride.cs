@@ -12,6 +12,8 @@ using TestWinBackGrnd.IO.GraphicFile;
 using TestWinBackGrnd.IO.GraphicFile.Parsers;
 using TestWinBackGrnd.IO.GraphicFile.Visitors;
 using TestWinBackGrnd.IO.GraphicFile.Interpreters;
+using TestWinBackGrnd;
+using System.Diagnostics;
 
 namespace WinGraphicsController.view
 {
@@ -72,7 +74,6 @@ namespace WinGraphicsController.view
 
                 return true;
             }), IntPtr.Zero);
-
         }
 
         /// <summary>
@@ -93,6 +94,7 @@ namespace WinGraphicsController.view
         /// <summary>
         /// Demo function for rendering a basic hexagon and X through it.
         /// </summary>
+        [Obsolete("Replaced by 'NewDrawWarning()'.")]
         public void DrawWarningOnBkg()
         {
             UseWorkerWDC(new DeviceContextUsage(dc => {
@@ -128,25 +130,24 @@ namespace WinGraphicsController.view
             }));
         }
         
+        /// <summary>
+        /// Updated draw method using ZUL script to render on the desktop background.
+        /// </summary>
         public void NewDrawWarning()
         {
             UseWorkerWDC(new DeviceContextUsage(dc =>
             {
                 using (Graphics g = Graphics.FromHdc(dc))
                 {
-                    GraphicsLexer parsersLexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
-                    GraphicsParser parser = new GraphicsParser(parsersLexer);
-                    parser.Parse();
-                    MonoScopeVisitor symbolVisitor = new MonoScopeVisitor();
-                    parser.GetTree().Visit(symbolVisitor);
-                    ZULInterpreter interpreter = new ZULInterpreter(symbolVisitor.GetSymbolTable(), g);
-                    parser.GetTree().Visit(interpreter);
+                    ZULMachine zulMachine = new ZULMachine(Resources.zastromo_warning_underlay);
+                    zulMachine.LoadGraphicsOut(g);
+                    zulMachine.Execute();
                 }
             }));
         }
 
         /// <summary>
-        /// Clear the WorkerW window
+        /// Clear the WorkerW window (does not work yet).
         /// </summary>
         public void ClearBackground()
         {
@@ -173,6 +174,10 @@ namespace WinGraphicsController.view
             }
         }
 
+        /// <summary>
+        /// Delegate methdod for use in relation to a Graphics object initialised from device context.
+        /// </summary>
+        /// <param name="dc">The pointer to the device context in question.</param>
         public delegate void DeviceContextUsage(IntPtr dc);
 
         private IntPtr GetWorkerWDeviceContext()

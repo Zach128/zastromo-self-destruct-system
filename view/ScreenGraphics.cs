@@ -10,7 +10,7 @@ using TestWinBackGrnd.Svg;
 
 namespace WinGraphicsController.view
 {
-    class ScreenGraphics
+    public class ScreenGraphics
     {
         private RectangleF screenPix;
         private RectangleF ScreenPix
