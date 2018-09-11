@@ -22,7 +22,9 @@ namespace TestWinBackGrnd.IO.GraphicFile
             C = input[p];
         }
 
-        //Move ahead one character in the input string
+        /// <summary>
+        /// Move ahead one character in the input string.
+        /// </summary>
         public void Consume()
         {
             p++;
@@ -30,10 +32,20 @@ namespace TestWinBackGrnd.IO.GraphicFile
             else C = input[p];
         }
 
+        /// <summary>
+        /// Match the expected character to the current lookahead and consume it.
+        /// </summary>
+        /// <param name="x"></param>
         public void Match(char x)
         {
             if (C == x) Consume();
             else throw new MatchNotFoundException("Expecting " + x + "; found " + C);
+        }
+
+        public void Reset()
+        {
+            p = 0;
+            C = input[p];
         }
 
         public abstract Token NextToken();

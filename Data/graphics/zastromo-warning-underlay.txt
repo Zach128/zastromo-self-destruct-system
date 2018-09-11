@@ -1,6 +1,19 @@
 VER : 0.1;
 
 //This is an early test script for the zastromo underlay drawing system (codenamed Z.U.L.).
+//This script is designed for version 0.1 of the interpreter pipeline.
+
+/*
+This script tests the following:
+-Array types (declaration and initialisation)
+-Array accessing
+-Point types (declaration and initialisation)
+-Line types (declaration and initialisation)
+-Pen types (declaration and initialisation)
+-floats, integers values
+-System-specific variables(VER, basePen, renderMode)
+-System-specific functions(linesplt, draw, drawPoly)
+*/
 
 //Data
 //Octagon shape

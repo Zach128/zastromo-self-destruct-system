@@ -13,7 +13,11 @@ namespace TestWinBackGrnd.IO.GraphicFile
         public GraphicsLexer(string input) : base(input)
         {
         }
-
+        
+        /// <summary>
+        /// Process and return a list of tokens based on the value of <code>input</code>.
+        /// </summary>
+        /// <returns>A collection of tokens from the processed string.</returns>
         public IList<Token> GetTokens()
         {
             Stack<Token> tokens = new Stack<Token>();
@@ -26,7 +30,7 @@ namespace TestWinBackGrnd.IO.GraphicFile
             return tokens.ToList();
         }
 
-        //Process and return token
+        //Process and return the next token
         public override Token NextToken()
         {
             while (ReachEOF != true)
@@ -99,8 +103,21 @@ namespace TestWinBackGrnd.IO.GraphicFile
         private void COMMENT()
         {
             Consume();
+
+            //In-line comments
             if (C == '/')
                 do Consume(); while (C != '\n');
+            else if (C == '*')
+            {
+                do
+                {
+                    Consume();
+                    do Consume(); while (C != '*');
+                    Consume();
+                } while (C != '/');
+                Consume();
+            }
+            else throw new FormatException("Invalid comment format; expected '*' or '/'. Found '" + C + "'");
         }
 
         //Get string name from buffer

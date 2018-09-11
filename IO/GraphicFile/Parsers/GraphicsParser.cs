@@ -90,7 +90,7 @@ namespace TestWinBackGrnd.IO.GraphicFile.Parsers
             Token token = LT(1);
             if (token.type == TokenType.NAME && LA(2) == TokenType.NAME)
             {
-
+                
                 DeclNode decl = new DeclNode(new NameNode(token), new NameNode(LT(2)));
                 currentNode.AddChild(decl);
 
