@@ -1,0 +1,105 @@
+////Z.U.L. (Zastromo's Underlay Language)
+
+grammar zastromo-graphics
+
+////script line beginnings////
+scriptLine : declaration | assignment | methodCall | lineComment;
+declaration	: arrDec
+			| pointDec
+			| lineDec
+			| penDec
+			;
+assignment	: arrAssign
+			| pointAssign
+			| renderModeAssign
+			| defaultPenAssign
+			| penAssign
+			| lineAssign
+			| VARNAME ':' VARNAME;
+			;
+methodCall	: drawMethod
+			| drawPolyMethod
+			| lineSplitMethod
+			;
+
+////Variable types////
+int			: ('0' .. '9')+; 		//Unsigned integer composed of 1-many digits.
+sInt		: '-'? int;
+byte		: '0' .. '255';
+hexNibble	: '0' .. '9' | 'A' .. 'F';
+hexByte		: hexNibble hexNibble;
+decimal		: int ('.' int)?;
+float		: decimal 'f';			//Float consisting of 2 period-separated digits with an 'f' suffix.
+ruPe		: decimal 'rp';			//Relative percent unit similar to a float but with an rp suffix.
+
+////Strings and variable names////
+namesafeChars	: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9')*;
+VARNAME			: namesafeChars;
+
+////Array variables////
+element		: namesafeChars | point | pen | arr;			//Possible array content types
+elements	: element (',' element)*;	//Internal array structure
+arr			: '{' element '}';			//Overall array structure
+arrIndex	: int;
+arrDec 		: arrKeyword VARNAME ':' arr;	//Array declaration
+arrAssign	: VARNAME ':' arr;
+arrAccess	: VARNAME '[' arrIndex ']'; //Access array variable
+arrKeyword	: 'arr';
+
+////Point variables////
+point		: 'point' '(' decimal ',' decimal ')'	//2D point initialisation forms
+			| 'point' '(' float ',' float ')'
+			| 'point' '(' ruPe ',' ruPe ')'
+			| VARNAME
+			;
+pointDec	: 'point' VARNAME ':' point;
+pointAssign	: VARNAME ':' point;
+
+////Header variables////
+VerId		: int ('.' int)0..3;		//Version id type restricted to 5 separated integers.
+VERSION		: 'VER' VerId;
+
+////Local variables////
+renderModeEnum		: 'LOW' | 'SMOOTH_LOW' | 'SMOOTH_HIGH';
+renderModeAssign	: renderModeKeyword ':' renderModeEnum;
+renderModeKeyword	: 'renderMode';
+defaultPenAssign	: defaultPenKeyword ':' pen;
+defaultPenKeyword	: 'basePen';
+
+////Pen variables////
+colourEnum	: 'RED'								//Simple enum of basic colours.
+			| 'GREEN'
+			| 'BLUE'
+			| 'YELLOW'
+			| 'WHITE'
+			| 'BLACK'
+			| 'ORANGE_RED'
+			| 'VIOLET'
+			;
+colourHex	: '0x' hexByte hexByte hexByte;		//RGB8 format for colours.
+colour		: colourEnum | colourHex;			//Either a predefined colour or a hex value will suffice.
+pen			: penKeyword '(' colour ',' float ')'	//A pen object defined by colour and pen size.
+			| VARNAME
+			;
+penDec		: penKeyword VARNAME ':' pen;
+penAssign	: VARNAME ':' pen;
+penKeyword	: 'pen';
+
+////Line variables////
+lineKeyword	: 'line';
+line		: lineKeyword '(' point ',' point ')'//Default line constructor
+			| VARNAME
+			| lineSplitMethod				//Return value of linesplt is line variable
+			;
+lineDec		: lineKeyword VARNAME ':' line;
+lineAssign	: VARNAME ':' pen;
+
+////Method calls////
+drawMethod		: 'draw' '(' line|arr|point ')';	//Draw all the points provided
+drawPolyMethod	: 'drawPoly' '(' arr ')';			//Draw all the points provided, linking the first and final point together	
+lineSplitMethod	: 'linesplt' '(' point ',' point (',' float)? ')' 	//Get a point by splitting a line 50/50 or by a predefined percentage.
+				| 'linesplt' '(' line (',' float)? ')'
+				;
+
+////Miscellaneous////
+lineComment	: '//';

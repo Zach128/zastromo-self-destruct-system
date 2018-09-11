@@ -2,9 +2,14 @@
 using SelfDestructCommons.Model.GraphicsMessages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TestWinBackGrnd.IO.GraphicFile;
+using TestWinBackGrnd.IO.GraphicFile.Interpreters;
+using TestWinBackGrnd.IO.GraphicFile.Models;
+using TestWinBackGrnd.IO.GraphicFile.Parsers;
+using TestWinBackGrnd.IO.GraphicFile.Symbols;
+using TestWinBackGrnd.IO.GraphicFile.SyntaxTrees;
+using TestWinBackGrnd.IO.GraphicFile.Visitors;
+using TestWinBackGrnd.Properties;
 using WinGraphicsController.view;
 
 namespace WinGraphicsController
@@ -33,6 +38,39 @@ namespace WinGraphicsController
 
             Instance.winOverride = new WinBackgroundOverride();
 
+            Instance.winOverride.NewDrawWarning();
+            Console.WriteLine("\nExecution complete.");
+            Console.ReadKey();
+
+            /*
+            GraphicsLexer lexer = new GraphicsLexer(Resources.zastromo_warning_underlay);
+            List<Token> tokens = (List<Token>) lexer.GetTokens();
+            Token t = tokens[tokens.Count - 1];
+            tokens.Remove(t);
+            int lineCount = 1;
+            int lineTokens = 1;
+
+            while (t.type != TokenType.EOF)
+            {
+                Console.WriteLine("Token " + lineCount + "." + lineTokens + "\t" + t);
+                
+                //Increment token/line counts unless line terminator(';') reached.
+                if (t.type == TokenType.SEMICOLON)
+                {
+                    lineCount++;
+                    lineTokens = 1;
+                }
+                else lineTokens++;
+
+                t = tokens[tokens.Count - 1];
+                tokens.Remove(t);
+            }
+
+            Console.WriteLine("\nToken printing complete. Press any key to continue...");
+            Console.ReadKey();
+            //*/
+
+            /*
             Instance.StartClient();
             Console.Write("Client started.\n");
 
@@ -43,7 +81,7 @@ namespace WinGraphicsController
                 Instance.WaitForConnection();
                 Instance.WaitForDisconnection();
             }
-
+            //*/
         }
 
         public override void ClientDisconnected()
@@ -72,11 +110,12 @@ namespace WinGraphicsController
                 case BKG_ACTION.SHW_WRN:
                     try
                     {
-                        winOverride.DrawWarningOnBkg();
+                        winOverride.NewDrawWarning();
                         return BKG_RESPONSE.MSG_OK;
                     }
                     catch (Exception e)
                     {
+                        Console.Write(e.StackTrace);
                         return BKG_RESPONSE.CTRL_FAIL;
                     }
                 case BKG_ACTION.CLEAR_BKG:

@@ -11,6 +11,21 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,11 +67,66 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\GraphicFile\Exceptions\UnsupportedVersionException.cs" />
+    <Compile Include="IO\GraphicFile\Interpreters\ZULInterpreter.cs" />
+    <Compile Include="IO\GraphicFile\GraphicsLexer.cs" />
+    <Compile Include="IO\GraphicFile\Models\Line.cs" />
+    <Compile Include="IO\GraphicFile\Models\ZPen.cs" />
+    <Compile Include="IO\GraphicFile\Models\ZPoint.cs" />
+    <Compile Include="IO\GraphicFile\Models\Rupe.cs" />
+    <Compile Include="IO\GraphicFile\Parsers\GraphicsParser.cs" />
+    <Compile Include="IO\GraphicFile\Lexer.cs" />
+    <Compile Include="IO\GraphicFile\Exceptions\MatchNotFoundException.cs" />
+    <Compile Include="IO\GraphicFile\Parsers\Parser.cs" />
+    <Compile Include="IO\GraphicFile\Models\Token.cs" />
+    <Compile Include="IO\GraphicFile\Models\TokenType.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ArrayType.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ClassTypeSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ConstantSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\FunctionSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ISymbolProvider.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\ArrayScope.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\BaseScope.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\GlobalScope.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\IScope.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\LocalScope.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Scopes\MonolithicSymbolTable.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\Symbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\IType.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\SymbolTable.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\SystemTypeSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\VariableSymbol.cs" />
+    <Compile Include="IO\GraphicFile\Symbols\ZULAst.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\OldArrayNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ArrNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ArrRetNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\AST.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\DeclNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ExprNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\FuncNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\ITreeBuilder.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\NodeType.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\AssignNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NameNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\PrimNodes\NumNode.cs" />
+    <Compile Include="IO\GraphicFile\SyntaxTrees\RootNode.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\IZULVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\MonoScopeVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\PrintTreeVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Visitors\PrintTypesVisitor.cs" />
+    <Compile Include="IO\GraphicFile\Interpreters\Interpreter.cs" />
     <Compile Include="libdll\User32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Svg\SvgParser.cs" />
     <Compile Include="view\ScreenGraphics.cs" />
     <Compile Include="view\WinBackgroundOverride.cs" />
+    <Compile Include="ZULMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -69,7 +139,32 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Content Include="IO\GraphicFile\Docs\doc-graphics-format.txt" />
+    <Content Include="IO\GraphicFile\Docs\doc-syntax-tree-nodes.txt" />
+    <Content Include="Data\graphics\zastromo-warning-underlay.txt" />
+    <Content Include="IO\GraphicFile\Docs\test-sample-ast.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\graphics\self-destruct-warning.svg" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

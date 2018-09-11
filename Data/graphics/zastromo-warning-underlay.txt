@@ -1,0 +1,54 @@
+VER : 0.1;
+
+//This is an early test script for the zastromo underlay drawing system (codenamed Z.U.L.).
+//This script is designed for version 0.1 of the interpreter pipeline.
+
+/*
+This script tests the following:
+-Array types (declaration and initialisation)
+-Array accessing
+-Point types (declaration and initialisation)
+-Line types (declaration and initialisation)
+-Pen types (declaration and initialisation)
+-floats, integers values
+-System-specific variables(VER, basePen, renderMode)
+-System-specific functions(linesplt, draw, drawPoly)
+*/
+
+//Data
+//Octagon shape
+arr octPoints : {
+point(37.5f, 87.5f),
+point(62.5f, 87.5f),
+point(87.5f, 62.5f),
+point(87.5f, 37.5f),
+point(62.5f, 12.5f),
+point(37.5f, 12.5f),
+point(12.5f, 37.5f),
+point(12.5f, 62.5f)
+};
+
+//octPoints[0] : point(99.9f, 99.9f);
+
+//Cross line 1
+line line1 : line(
+linesplt(octPoints[0], octPoints[7]),
+linesplt(octPoints[3], octPoints[4])
+);
+//Cross line 2
+line line2 : line(
+linesplt(octPoints[1], octPoints[2]),
+linesplt(octPoints[5], octPoints[6])
+);
+
+//Setting render mode to high quality
+renderMode : SMOOTH_HIGH;
+
+//Setting the pen to a thin orange pen
+basePen : pen(ORANGE, 7.5f);
+draw(line1);
+draw(line2);
+
+basePen : pen(ORANGE_RED, 10f);
+//Draw the octagon as a polygon
+drawPoly(octPoints);
